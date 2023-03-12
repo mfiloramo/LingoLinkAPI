@@ -29,7 +29,7 @@ const testRouter_1 = require("./routes/testRouter");
 app.use('/api', testRouter_1.genericRouter);
 // DEBUG: TEST ENDPOINT
 app.get('/', (req, res) => {
-    res.json('This Will Be WorldChat');
+    res.json();
 });
 // RUN APPLICATION SERVER
 app.listen(port, () => {

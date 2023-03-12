@@ -33,7 +33,7 @@ app.use('/api', genericRouter);
 
 // DEBUG: TEST ENDPOINT
 app.get('/', (req: Request, res: Response) => {
-    res.json('This Will Be WorldChat');
+    res.json();
 });
 
 // RUN APPLICATION SERVER

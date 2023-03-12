@@ -4,6 +4,6 @@ import GenericController from "../controllers/generic.controller";
 
 const router: Router = express.Router();
 
-router.get('/', GenericController.testMethod);
+router.post('/translate', GenericController.testMethod);
 
 export const genericRouter: Router = router;

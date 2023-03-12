@@ -7,5 +7,5 @@ exports.genericRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const generic_controller_1 = __importDefault(require("../controllers/generic.controller"));
 const router = express_1.default.Router();
-router.get('/', generic_controller_1.default.testMethod);
+router.post('/translate', generic_controller_1.default.testMethod);
 exports.genericRouter = router;
