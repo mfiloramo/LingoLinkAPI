@@ -10,7 +10,7 @@ const port = 3000;
 
 // CORS OPTIONS
 const corsOptions: object = {
-    origin: [process.env.CLIENT_URI],
+    origin: 'http://localhost:4200',
     optionsSuccessStatus: 200,
     credentials: true,
 };
@@ -26,14 +26,14 @@ app
 //
 
 // APPLICATION ROUTE IMPORTS
-// ...
+import { genericRouter } from "./routes/testRouter";
 
 // APPLICATION ENDPOINTS
-// ...
+app.use('/api', genericRouter);
 
 // DEBUG: TEST ENDPOINT
 app.get('/', (req: Request, res: Response) => {
-    res.send('Fuck Off, World!');
+    res.json('This Will Be WorldChat');
 });
 
 // RUN APPLICATION SERVER
