@@ -1,10 +1,10 @@
-// APPLICATION DEPENDENCIES
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 
+// GLOBAL VARIABLES
 const app = express();
 const port = 3000;
 
@@ -15,17 +15,15 @@ const corsOptions: object = {
     credentials: true,
 };
 
-// APPLICATION OUTPUT
+// APPLICATION DEPENDENCIES
 app
     .use(express.json())
     .use(express.urlencoded({ extended: false }))
     .use(bodyParser.urlencoded({ extended: true }))
     .use(cors(corsOptions))
 
-// BASIC ENDPOINT
-app.get('/', (req: Request, res: Response) => {
-    res.send('Goodbye, World!');
-});
+// ROUTE PROTECTION
+//
 
 // APPLICATION ROUTE IMPORTS
 // ...
@@ -33,7 +31,12 @@ app.get('/', (req: Request, res: Response) => {
 // APPLICATION ENDPOINTS
 // ...
 
+// DEBUG: TEST ENDPOINT
+app.get('/', (req: Request, res: Response) => {
+    res.send('Fuck Off, World!');
+});
+
 // RUN APPLICATION SERVER
 app.listen(port, () => {
-    console.log(`Connected. Listening on port: ${port}...`);
+    console.log(`Connected, listening on port: ${port}...`);
 });
