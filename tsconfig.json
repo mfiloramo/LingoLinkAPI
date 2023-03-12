@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",                      /* Set the target ECMAScript version */
+    "module": "commonjs",                 /* Specify module code generation */
+    "strict": true,                       /* Enable strict type checking */
+    "outDir": "build",
+    "esModuleInterop": true,              /* Allow default imports from modules with no default export */
+    "forceConsistentCasingInFileNames": true /* Ensure consistent casing in file names */
+  },
+  "include": ["src/**/*"],                /* Specify files to include in compilation */
+  "exclude": ["node_modules", "build"]     /* Specify files to exclude from compilation */
+}
