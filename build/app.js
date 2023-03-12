@@ -21,7 +21,7 @@ app
     .use(express_1.default.urlencoded({ extended: false }))
     .use(body_parser_1.default.urlencoded({ extended: true }))
     .use((0, cors_1.default)(corsOptions));
-// ROUTE PROTECTION
+// ROUTE PROTECTION (PASSPORT, MSAL)
 //
 // APPLICATION ROUTE IMPORTS
 const testRouter_1 = require("./routes/testRouter");

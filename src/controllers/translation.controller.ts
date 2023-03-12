@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import axios from "axios";
 
 
-export class GenericController {
+export class TranslationController {
     static async testMethod(req: Request, res: Response): Promise<any> {
         // DEFINE ENCODED HTTP REQUEST PARAMETERS
         const encodedParams = new URLSearchParams();
@@ -33,4 +33,4 @@ export class GenericController {
         }
 }
 
-export default GenericController;
+export default TranslationController;

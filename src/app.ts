@@ -22,7 +22,7 @@ app
     .use(bodyParser.urlencoded({ extended: true }))
     .use(cors(corsOptions))
 
-// ROUTE PROTECTION
+// ROUTE PROTECTION (PASSPORT, MSAL)
 //
 
 // APPLICATION ROUTE IMPORTS
