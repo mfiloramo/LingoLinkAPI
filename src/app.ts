@@ -23,13 +23,13 @@ app
     .use(cors(corsOptions))
 
 // ROUTE PROTECTION (PASSPORT, MSAL)
-//
+// ...
 
 // APPLICATION ROUTE IMPORTS
-import { genericRouter } from "./routes/testRouter";
+import { translationRouter } from "./routes/translationRouter";
 
 // APPLICATION ENDPOINTS
-app.use('/api', genericRouter);
+app.use('/api', translationRouter);
 
 // DEBUG: TEST ENDPOINT
 app.get('/', (req: Request, res: Response) => {

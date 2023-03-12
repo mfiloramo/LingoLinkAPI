@@ -22,11 +22,11 @@ app
     .use(body_parser_1.default.urlencoded({ extended: true }))
     .use((0, cors_1.default)(corsOptions));
 // ROUTE PROTECTION (PASSPORT, MSAL)
-//
+// ...
 // APPLICATION ROUTE IMPORTS
-const testRouter_1 = require("./routes/testRouter");
+const translationRouter_1 = require("./routes/translationRouter");
 // APPLICATION ENDPOINTS
-app.use('/api', testRouter_1.genericRouter);
+app.use('/api', translationRouter_1.translationRouter);
 // DEBUG: TEST ENDPOINT
 app.get('/', (req, res) => {
     res.json();
