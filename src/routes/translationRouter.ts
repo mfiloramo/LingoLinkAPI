@@ -4,6 +4,6 @@ import TranslationController from "../controllers/translation.controller";
 
 const router: Router = express.Router();
 
-router.post('/translate', TranslationController.testMethod);
+router.post('/translate', TranslationController.translateText);
 
 export const translationRouter: Router = router;

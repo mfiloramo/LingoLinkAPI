@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 export class TranslationController {
-    static async testMethod(req: Request, res: Response): Promise<any> {
+    static async translateText(req: Request, res: Response): Promise<any> {
         // DEFINE ENCODED HTTP REQUEST PARAMETERS
         const encodedParams = new URLSearchParams();
         encodedParams.append("q", req.body.inputText);
@@ -24,13 +24,15 @@ export class TranslationController {
         };
 
         // SEND HTTP REQUEST AND RETURN RESPONSE
-        axios.request(options).then(function (response) {
-            res.json(response.data.data.translations[0].translatedText);
-        }).catch(function (error) {
-            console.error(error);
-        });
-
-        }
+        axios
+          .request(options)
+          .then((response: any) => {
+              res.json(response.data.data.translations[0].translatedText);
+          })
+          .catch((error: any) => {
+              console.error(error);
+          });
+    }
 }
 
 export default TranslationController;

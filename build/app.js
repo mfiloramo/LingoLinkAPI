@@ -8,12 +8,12 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 // GLOBAL VARIABLES
 const app = (0, express_1.default)();
-const port = 3000;
+const PORT = 3000;
 // CORS OPTIONS
 const corsOptions = {
     origin: 'http://localhost:4200',
     optionsSuccessStatus: 200,
-    credentials: true,
+    credentials: true
 };
 // APPLICATION DEPENDENCIES
 app
@@ -27,11 +27,7 @@ app
 const translationRouter_1 = require("./routes/translationRouter");
 // APPLICATION ENDPOINTS
 app.use('/api', translationRouter_1.translationRouter);
-// DEBUG: TEST ENDPOINT
-app.get('/', (req, res) => {
-    res.json();
-});
-// RUN APPLICATION SERVER
-app.listen(port, () => {
-    console.log(`Connected, listening on port: ${port}...`);
+// RUN EXPRESS SERVER
+app.listen(PORT, () => {
+    console.log(`Listening on port: ${PORT}...`);
 });

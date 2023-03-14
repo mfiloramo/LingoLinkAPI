@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TranslationController = void 0;
 const axios_1 = __importDefault(require("axios"));
 class TranslationController {
-    static testMethod(req, res) {
+    static translateText(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             // DEFINE ENCODED HTTP REQUEST PARAMETERS
             const encodedParams = new URLSearchParams();
@@ -35,9 +35,12 @@ class TranslationController {
                 data: encodedParams
             };
             // SEND HTTP REQUEST AND RETURN RESPONSE
-            axios_1.default.request(options).then(function (response) {
+            axios_1.default
+                .request(options)
+                .then((response) => {
                 res.json(response.data.data.translations[0].translatedText);
-            }).catch(function (error) {
+            })
+                .catch((error) => {
                 console.error(error);
             });
         });

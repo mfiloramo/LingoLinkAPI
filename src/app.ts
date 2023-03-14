@@ -6,13 +6,13 @@ import cors from 'cors';
 
 // GLOBAL VARIABLES
 const app = express();
-const port = 3000;
+const PORT = 3000;
 
 // CORS OPTIONS
 const corsOptions: object = {
     origin: 'http://localhost:4200',
     optionsSuccessStatus: 200,
-    credentials: true,
+    credentials: true
 };
 
 // APPLICATION DEPENDENCIES
@@ -31,12 +31,7 @@ import { translationRouter } from "./routes/translationRouter";
 // APPLICATION ENDPOINTS
 app.use('/api', translationRouter);
 
-// DEBUG: TEST ENDPOINT
-app.get('/', (req: Request, res: Response) => {
-    res.json();
-});
-
-// RUN APPLICATION SERVER
-app.listen(port, () => {
-    console.log(`Connected, listening on port: ${port}...`);
+// RUN EXPRESS SERVER
+app.listen(PORT, () => {
+    console.log(`Listening on port: ${PORT}...`);
 });
