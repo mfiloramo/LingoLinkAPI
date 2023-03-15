@@ -3,11 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// MODULE IMPORTS
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const http_1 = __importDefault(require("http"));
+const ws_1 = __importDefault(require("ws"));
+// ROUTE IMPORTS
+const translationRouter_1 = require("./routes/translationRouter");
 // GLOBAL VARIABLES
 const app = (0, express_1.default)();
+const server = http_1.default.createServer(app);
+const wss = new ws_1.default.Server({ port: 8080 });
 const PORT = 3000;
 // CORS OPTIONS
 const corsOptions = {
@@ -23,10 +30,22 @@ app
     .use((0, cors_1.default)(corsOptions));
 // ROUTE PROTECTION (PASSPORT, MSAL)
 // ...
-// APPLICATION ROUTE IMPORTS
-const translationRouter_1 = require("./routes/translationRouter");
 // APPLICATION ENDPOINTS
 app.use('/api', translationRouter_1.translationRouter);
+// WEBSOCKET SERVER
+wss.on('connection', (ws) => {
+    console.log('Client connected');
+    ws.on('message', (message) => {
+        wss.clients.forEach((client) => {
+            if (client !== ws && client.readyState === ws_1.default.OPEN) {
+                client.send(message);
+            }
+        });
+    });
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
 // RUN EXPRESS SERVER
 app.listen(PORT, () => {
     console.log(`Listening on port: ${PORT}...`);
