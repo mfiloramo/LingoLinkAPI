@@ -7,8 +7,8 @@ export class TranslationController {
         // DEFINE ENCODED HTTP REQUEST PARAMETERS
         const encodedParams = new URLSearchParams();
         encodedParams.append("q", req.body.inputText);
-        encodedParams.append("target", "es");
-        encodedParams.append("source", "en");
+        encodedParams.append("target", req.body.targLang); // your global var
+        encodedParams.append("source", req.body.srcLang); // message.lang
 
         // CONFIGURE REQUEST OPTIONS
         const options = {

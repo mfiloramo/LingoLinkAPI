@@ -36,7 +36,6 @@ app.use('/api', translationRouter_1.translationRouter);
 wss.on('connection', (ws) => {
     console.log('Client connected');
     ws.on('message', (message) => {
-        console.log(`Received message: ${JSON.stringify(message)}`);
         wss.clients.forEach((client) => {
             if (client !== ws && client.readyState === ws_1.default.OPEN) {
                 client.send(message);
