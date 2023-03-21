@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import axios from "axios";
+import axios from 'axios';
 
 
 export class TranslationController {
