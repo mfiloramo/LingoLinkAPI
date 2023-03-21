@@ -42,6 +42,7 @@ app.use('/api/messages', messagesRouter_1.messagesRouter);
 app.use('/api/conversations', conversationsRouter_1.conversationsRouter);
 // WEBSOCKET SERVER
 wss.on('connection', (ws) => {
+    // INDICATE WHEN CLIENT HAS CONNECTED
     console.log('Client connected...');
     // BROADCAST WEBSOCKET DATA TO CLIENTS
     ws.on('message', (message) => {
@@ -51,7 +52,7 @@ wss.on('connection', (ws) => {
             }
         });
     });
-    // INDICATE CLIENT HAS DISCONNECTED ON DISCONNECT
+    // INDICATE WHEN CLIENT HAS DISCONNECTED
     ws.on('close', () => {
         console.log('Client disconnected...');
     });
