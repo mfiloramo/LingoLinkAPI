@@ -10,7 +10,74 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messagesController = void 0;
+const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
 const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('success');
+    switch (req.method) {
+        // SELECT MESSAGE BY ID
+        case 'GET':
+            try {
+                const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
+                    replacements: {
+                        conversationId: req.body.conversationId,
+                        limit: req.body.limit,
+                        offset: req.body.offset
+                    }
+                });
+                res.send(response[0][0]);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            break;
+        // CREATE NEW MESSAGE
+        case 'POST':
+            try {
+                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :timestamp', {
+                    replacements: {
+                        conversationId: req.body.conversationId,
+                        userId: req.body.userId,
+                        content: req.body.content,
+                        timestamp: new Date()
+                    }
+                });
+                res.send(`Message with conversationId ${req.body.conversationId} created successfully`);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            break;
+        // UPDATE EXISTING MESSAGE
+        case 'PUT':
+            try {
+                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :timestamp', {
+                    replacements: {
+                        messageId: req.body.messageId,
+                        content: req.body.content,
+                        timestamp: new Date(),
+                    }
+                });
+                res.send(`Message ${req.body.messageId} updated successfully`);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            break;
+        // DELETE EXISTING MESSAGE BY ID
+        case 'DELETE':
+            try {
+                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :messageId', {
+                    replacements: {
+                        messageId: req.body.messageId,
+                    }
+                });
+                res.send(`Message ${req.body.messageId} deleted successfully`);
+            }
+            catch (error) {
+                console.log(error);
+            }
+            break;
+        default:
+            break;
+    }
 });
 exports.messagesController = messagesController;
