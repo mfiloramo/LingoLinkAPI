@@ -10,7 +10,32 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.participantsController = void 0;
-const participantsController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send('success');
+const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
+const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    switch (req.method) {
+        case 'GET':
+            try {
+                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password', {
+                    replacements: {
+                        username: 'f',
+                        email: 'f@teafast.com',
+                        password: 'fafaffff!'
+                    }
+                });
+            }
+            catch (error) {
+                console.log(error);
+            }
+            res.send('User Successfully Added');
+            break;
+        case 'POST':
+            break;
+        case 'PUT':
+            break;
+        case 'DELETE':
+            break;
+        default:
+            break;
+    }
 });
 exports.participantsController = participantsController;

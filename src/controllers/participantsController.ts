@@ -1,7 +1,35 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
+import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const participantsController = async (req: Request, res: Response, next: NextFunction) => {
-  res.send('success');
+export const participantsController = async (req: Request, res: Response) => {
+  switch (req.method) {
+    case 'GET':
+      try {
+        await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password', {
+          replacements: {
+            username: 'f',
+            email: 'f@teafast.com',
+            password: 'fafaffff!'
+          }
+        })
+      } catch (error: any) {
+        console.log(error);
+      }
+      res.send('User Successfully Added');
+      break;
+
+    case 'POST':
+      break;
+
+    case 'PUT':
+      break;
+
+    case 'DELETE':
+      break;
+
+    default:
+      break;
+  }
 }
 
