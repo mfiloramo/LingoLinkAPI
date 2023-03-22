@@ -52,7 +52,7 @@ wss.on('connection', (ws) => {
             }
         });
     });
-    // INDICATE WHEN CLIENT HAS DISCONNECTED
+    // INDICATE CLIENT DISCONNECTION
     ws.on('close', () => {
         console.log('Client disconnected...');
     });
