@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node build/app.js",
     "dev": "nodemon build/app.js",
-    "tsc": "tsc --watch"
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",

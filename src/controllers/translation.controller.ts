@@ -1,14 +1,17 @@
 import { Request, Response } from 'express';
-import axios from "axios";
+import axios from 'axios';
 
 
 export class TranslationController {
     static async translateText(req: Request, res: Response): Promise<any> {
         // DEFINE ENCODED HTTP REQUEST PARAMETERS
-        const encodedParams = new URLSearchParams();
-        encodedParams.append("q", req.body.inputText);
-        encodedParams.append("target", req.body.targLang); // your global var
-        encodedParams.append("source", req.body.srcLang); // message.lang
+        const params = {
+            q: req.body.inputText,
+            target: req.body.targLang,
+            source: req.body.srcLang
+        };
+
+        const encodedParams = new URLSearchParams(params);
 
         // CONFIGURE REQUEST OPTIONS
         const options = {

@@ -8,6 +8,10 @@ import WebSocket from 'ws';
 
 // ROUTE IMPORTS
 import { translationRouter } from "./routes/translationRouter";
+import { usersRouter } from "./routes/usersRouter";
+import { participantsRouter } from "./routes/participantsRouter";
+import { messagesRouter } from "./routes/messagesRouter";
+import { conversationsRouter } from "./routes/conversationsRouter";
 
 // GLOBAL VARIABLES
 const app = express();
@@ -29,16 +33,22 @@ app
     .use(bodyParser.urlencoded({ extended: true }))
     .use(cors(corsOptions))
 
-// ROUTE PROTECTION (PASSPORT, MSAL)
+// TODO: ROUTE PROTECTION (PASSPORT, MSAL)
 // ...
 
 // APPLICATION ENDPOINTS
-app.use('/api', translationRouter);
+app.use('/api/translate', translationRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/participants', participantsRouter);
+app.use('/api/messages', messagesRouter);
+app.use('/api/conversations', conversationsRouter);
 
 // WEBSOCKET SERVER
 wss.on('connection', (ws) => {
-    console.log('Client connected');
+    // INDICATE WHEN CLIENT HAS CONNECTED
+    console.log('Client connected...');
 
+    // BROADCAST WEBSOCKET DATA TO CLIENTS
     ws.on('message', (message) => {
         wss.clients.forEach((client) => {
             if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -47,8 +57,9 @@ wss.on('connection', (ws) => {
         });
     });
 
+    // INDICATE CLIENT DISCONNECTION
     ws.on('close', () => {
-        console.log('Client disconnected');
+        console.log('Client disconnected...');
     });
 });
 

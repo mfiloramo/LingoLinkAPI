@@ -7,5 +7,5 @@ exports.translationRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const translation_controller_1 = __importDefault(require("../controllers/translation.controller"));
 const router = express_1.default.Router();
-router.post('/translate', translation_controller_1.default.translateText);
+router.post('/', translation_controller_1.default.translateText);
 exports.translationRouter = router;
