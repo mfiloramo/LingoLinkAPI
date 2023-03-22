@@ -7,7 +7,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
-const http_1 = __importDefault(require("http"));
 const ws_1 = __importDefault(require("ws"));
 // ROUTE IMPORTS
 const translationRouter_1 = require("./routes/translationRouter");
@@ -17,7 +16,6 @@ const messagesRouter_1 = require("./routes/messagesRouter");
 const conversationsRouter_1 = require("./routes/conversationsRouter");
 // GLOBAL VARIABLES
 const app = (0, express_1.default)();
-const server = http_1.default.createServer(app);
 const wss = new ws_1.default.Server({ port: 8080 });
 const PORT = 3000;
 // CORS OPTIONS
@@ -42,7 +40,7 @@ app.use('/api/messages', messagesRouter_1.messagesRouter);
 app.use('/api/conversations', conversationsRouter_1.conversationsRouter);
 // WEBSOCKET SERVER
 wss.on('connection', (ws) => {
-    // INDICATE WHEN CLIENT HAS CONNECTED
+    // INDICATE CLIENT CONNECTION
     console.log('Client connected...');
     // BROADCAST WEBSOCKET DATA TO CLIENTS
     ws.on('message', (message) => {
