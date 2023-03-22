@@ -17,9 +17,9 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
             try {
                 yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password', {
                     replacements: {
-                        username: 'f',
-                        email: 'f@teafast.com',
-                        password: 'fafaffff!'
+                        username: 'aaaaaaaa',
+                        email: 'f@teafaaaaaaaaast.com',
+                        password: 'fafaaaaaaaaaffff!'
                     }
                 });
             }

@@ -8,9 +8,9 @@ export const participantsController = async (req: Request, res: Response) => {
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password', {
           replacements: {
-            username: 'f',
-            email: 'f@teafast.com',
-            password: 'fafaffff!'
+            username: 'aaaaaaaa',
+            email: 'f@teafaaaaaaaaast.com',
+            password: 'fafaaaaaaaaaffff!'
           }
         })
       } catch (error: any) {
