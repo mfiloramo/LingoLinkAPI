@@ -5,7 +5,7 @@ export const participantsController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT PARTICIPANT
     case 'GET':
-      if (!req.params.id) {
+      if (!req.body.selector) {
         // SELECT ALL PARTICIPANTS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_SelectAll')
@@ -79,6 +79,7 @@ export const participantsController = async (req: Request, res: Response) => {
       }
       break;
 
+    // THROW ERROR INDICATING INVALID REQUEST TYPE
     default:
       res.status(500).send('Please provide appropriate HTTP request type');
       break;

@@ -15,10 +15,10 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
     switch (req.method) {
         // SELECT MESSAGE
         case 'GET':
-            if (!req.params.id) {
+            if (!req.body.conversationId) {
                 // SELECT ALL MESSAGES
                 try {
-                    const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll');
+                    const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll');
                     res.send(selectAll[0]);
                 }
                 catch (error) {
@@ -26,7 +26,7 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                 }
             }
             else {
-                // SELECT MESSAGE BY ID
+                // SELECT MESSAGE BY CONVERSATION ID
                 try {
                     const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
                         replacements: {
@@ -78,7 +78,7 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                 console.log(error);
             }
             break;
-        // DELETE EXISTING MESSAGE BY ID
+        // DELETE EXISTING MESSAGE BY MESSAGE ID
         case 'DELETE':
             try {
                 yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :messageId', {
@@ -93,6 +93,7 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                 console.log(error);
             }
             break;
+        // THROW ERROR INDICATING INVALID REQUEST TYPE
         default:
             res.status(500).send('Please provide appropriate HTTP request type');
             break;

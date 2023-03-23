@@ -15,7 +15,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
     switch (req.method) {
         // SELECT PARTICIPANT
         case 'GET':
-            if (!req.params.id) {
+            if (!req.body.selector) {
                 // SELECT ALL PARTICIPANTS
                 try {
                     const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_SelectAll');
@@ -92,6 +92,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
                 console.log(error);
             }
             break;
+        // THROW ERROR INDICATING INVALID REQUEST TYPE
         default:
             res.status(500).send('Please provide appropriate HTTP request type');
             break;
