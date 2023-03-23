@@ -4,17 +4,29 @@ import {wcCoreMSQLConnection} from "../config/database/wcCoreMSQLConnection";
 
 export const conversationsController = async (req: Request, res: Response, next: NextFunction) => {
   switch (req.method) {
-    // SELECT CONVERSATION BY ID
+    // SELECT CONVERSATION
     case 'GET':
-      try {
-        const response = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
-          replacements: {
-            conversationId: req.body.conversationId,
-          }
-        })
-        res.send(response[0][0]);
-      } catch (error: any) {
-        console.log(error);
+      if (!req.params.id) {
+        // SELECT ALL CONVERSATIONS
+        try {
+          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
+          res.send(selectAll[0]);
+        } catch (error: any) {
+          res.status(500).send(error);
+        }
+      } else {
+        // SELECT CONVERSATION BY ID
+        try {
+          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
+            replacements: {
+              conversationId: req.body.conversationId,
+            }
+          })
+          res.send(response[0][0]);
+        } catch (error: any) {
+          res.status(500).send(error);
+          console.log(error);
+        }
       }
       break;
 
@@ -28,6 +40,7 @@ export const conversationsController = async (req: Request, res: Response, next:
         })
         res.send(`Conversation with name ${req.body.name} created successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
@@ -43,6 +56,7 @@ export const conversationsController = async (req: Request, res: Response, next:
         })
         res.send(`Conversation ${req.body.name} updated successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
@@ -57,11 +71,13 @@ export const conversationsController = async (req: Request, res: Response, next:
         })
         res.send(`Conversation ${req.body.conversationId} deleted successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
 
     default:
+      res.status(500).send('Please provide appropriate HTTP request type');
       break;
   }}
 

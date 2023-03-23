@@ -5,31 +5,41 @@ export const participantsController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT PARTICIPANT
     case 'GET':
-      if (req.body.selector === 'conversationId') {
+      if (!req.params.id) {
+        // SELECT ALL PARTICIPANTS
+        try {
+          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_SelectAll')
+          res.send(selectAll[0]);
+        } catch (error: any) {
+          res.status(500).send(error);
+        }
         // HANDLE SELECTION BY conversationId
-        try {
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_ConId :conversationId', {
-            replacements: {
-              conversationId: req.body.conversationId
-            }
-          })
-          res.send(response[0][0]);
-        } catch (error: any) {
-          console.log(error);
+        } else if (req.body.selector === 'conversationId') {
+          try {
+            const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_ConId :conversationId', {
+              replacements: {
+                conversationId: req.body.conversationId
+              }
+            })
+            res.send(response[0][0]);
+          } catch (error: any) {
+            res.status(500).send(error);
+            console.log(error);
+          }
+          // HANDLE SELECTION BY userId
+        } else if (req.body.selector === 'userId') {
+          try {
+            const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_UserId :userId', {
+              replacements: {
+                userId: req.body.userId
+              }
+            })
+            res.send(response[0][0]);
+          } catch (error: any) {
+            res.status(500).send(error);
+            console.log(error);
+          }
         }
-      } else if (req.body.selector === 'userId') {
-        // HANDLE SELECTION BY userId
-        try {
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_UserId :userId', {
-            replacements: {
-              userId: req.body.userId
-            }
-          })
-          res.send(response[0][0]);
-        } catch (error: any) {
-          console.log(error);
-        }
-      }
       break;
 
     // CREATE NEW PARTICIPANT
@@ -43,6 +53,7 @@ export const participantsController = async (req: Request, res: Response) => {
         })
         res.send(`Participant with userId ${req.body.userId} created successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
@@ -63,11 +74,13 @@ export const participantsController = async (req: Request, res: Response) => {
         })
         res.send(`Participant with userId ${req.body.userId} and conversationId ${req.body.conversationId} deleted successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
 
     default:
+      res.status(500).send('Please provide appropriate HTTP request type');
       break;
   }
 }

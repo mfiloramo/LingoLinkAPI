@@ -15,8 +15,18 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
     switch (req.method) {
         // SELECT PARTICIPANT
         case 'GET':
-            if (req.body.selector === 'conversationId') {
+            if (!req.params.id) {
+                // SELECT ALL PARTICIPANTS
+                try {
+                    const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_SelectAll');
+                    res.send(selectAll[0]);
+                }
+                catch (error) {
+                    res.status(500).send(error);
+                }
                 // HANDLE SELECTION BY conversationId
+            }
+            else if (req.body.selector === 'conversationId') {
                 try {
                     const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_ConId :conversationId', {
                         replacements: {
@@ -26,11 +36,12 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
                     res.send(response[0][0]);
                 }
                 catch (error) {
+                    res.status(500).send(error);
                     console.log(error);
                 }
+                // HANDLE SELECTION BY userId
             }
             else if (req.body.selector === 'userId') {
-                // HANDLE SELECTION BY userId
                 try {
                     const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_UserId :userId', {
                         replacements: {
@@ -40,6 +51,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
                     res.send(response[0][0]);
                 }
                 catch (error) {
+                    res.status(500).send(error);
                     console.log(error);
                 }
             }
@@ -56,6 +68,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
                 res.send(`Participant with userId ${req.body.userId} created successfully`);
             }
             catch (error) {
+                res.status(500).send(error);
                 console.log(error);
             }
             break;
@@ -75,10 +88,12 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
                 res.send(`Participant with userId ${req.body.userId} and conversationId ${req.body.conversationId} deleted successfully`);
             }
             catch (error) {
+                res.status(500).send(error);
                 console.log(error);
             }
             break;
         default:
+            res.status(500).send('Please provide appropriate HTTP request type');
             break;
     }
 });

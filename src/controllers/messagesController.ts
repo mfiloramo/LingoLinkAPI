@@ -4,19 +4,31 @@ import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 export const messagesController = async (req: Request, res: Response, next: NextFunction) => {
   switch (req.method) {
-    // SELECT MESSAGE BY ID
+    // SELECT MESSAGE
     case 'GET':
-      try {
-        const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
-          replacements: {
-            conversationId: req.body.conversationId,
-            limit: req.body.limit,
-            offset: req.body.offset
-          }
-        })
-        res.send(response[0][0]);
-      } catch (error: any) {
-        console.log(error);
+      if (!req.params.id) {
+        // SELECT ALL MESSAGES
+        try {
+          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
+          res.send(selectAll[0]);
+        } catch (error: any) {
+          res.status(500).send(error);
+        }
+      } else {
+        // SELECT MESSAGE BY ID
+        try {
+          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
+            replacements: {
+              conversationId: req.body.conversationId,
+              limit: req.body.limit,
+              offset: req.body.offset
+            }
+          })
+          res.send(response[0][0]);
+        } catch (error: any) {
+          res.status(500).send(error);
+          console.log(error);
+        }
       }
       break;
 
@@ -33,6 +45,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
         })
         res.send(`Message with conversationId ${req.body.conversationId} created successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
@@ -49,6 +62,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
         })
         res.send(`Message ${req.body.messageId} updated successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
@@ -63,11 +77,13 @@ export const messagesController = async (req: Request, res: Response, next: Next
         })
         res.send(`Message ${req.body.messageId} deleted successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
 
     default:
+      res.status(500).send('Please provide appropriate HTTP request type');
       break;
   }
 }
