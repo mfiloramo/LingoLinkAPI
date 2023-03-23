@@ -75,7 +75,7 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
         // DELETE EXISTING CONVERSATION BY ID
         case 'DELETE':
             try {
-                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :conversationId', {
+                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Delete :conversationId', {
                     replacements: {
                         conversationId: req.body.conversationId,
                     }
@@ -87,6 +87,7 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
                 console.log(error);
             }
             break;
+        // THROW ERROR INDICATING INVALID REQUEST TYPE
         default:
             res.status(500).send('Please provide appropriate HTTP request type');
             break;

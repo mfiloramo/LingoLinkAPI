@@ -64,7 +64,7 @@ export const conversationsController = async (req: Request, res: Response, next:
     // DELETE EXISTING CONVERSATION BY ID
     case 'DELETE':
       try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :conversationId', {
+        await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Delete :conversationId', {
           replacements: {
             conversationId: req.body.conversationId,
           }
@@ -76,6 +76,7 @@ export const conversationsController = async (req: Request, res: Response, next:
       }
       break;
 
+    // THROW ERROR INDICATING INVALID REQUEST TYPE
     default:
       res.status(500).send('Please provide appropriate HTTP request type');
       break;

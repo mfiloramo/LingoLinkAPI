@@ -82,6 +82,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
       }
       break;
 
+    // THROW ERROR INDICATING INVALID REQUEST TYPE
     default:
       res.status(500).send('Please provide appropriate HTTP request type');
       break;
