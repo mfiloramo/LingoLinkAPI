@@ -4,17 +4,28 @@ import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 export const usersController = async (req: Request, res: Response, next: NextFunction) => {
   switch (req.method) {
-    // SELECT USER BY ID
     case 'GET':
-      try {
-        const response = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
-          replacements: {
-            userId: req.body.userId,
-          }
-        })
-        res.send(response[0][0]);
-      } catch (error: any) {
-        console.log(error);
+      if (!req.params.id) {
+        // SELECT ALL USERS
+        try {
+          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll')
+          res.send(selectAll[0]);
+        } catch (error: any) {
+          res.status(500).send(error);
+        }
+      } else {
+        // SELECT USER BY ID
+        try {
+          const response = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
+            replacements: {
+              userId: req.body.userId,
+            }
+          })
+          res.send(response[0][0]);
+        } catch (error: any) {
+          res.status(500).send(error);
+          console.log(error);
+        }
       }
       break;
 
@@ -30,6 +41,7 @@ export const usersController = async (req: Request, res: Response, next: NextFun
         })
         res.send(`User ${req.body.username} created successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
@@ -47,6 +59,7 @@ export const usersController = async (req: Request, res: Response, next: NextFun
         })
         res.send(`User ${req.body.username} updated successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
@@ -61,11 +74,13 @@ export const usersController = async (req: Request, res: Response, next: NextFun
         })
         res.send(`User ${req.body.userId} deleted successfully`);
       } catch (error: any) {
+        res.status(500).send(error);
         console.log(error);
       }
       break;
 
     default:
+      res.status(500).send('Please provide appropriate HTTP request type');
       break;
   }
 }

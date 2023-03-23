@@ -13,18 +13,32 @@ exports.conversationsController = void 0;
 const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
 const conversationsController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     switch (req.method) {
-        // SELECT CONVERSATION BY ID
+        // SELECT CONVERSATION
         case 'GET':
-            try {
-                const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
-                    replacements: {
-                        conversationId: req.body.conversationId,
-                    }
-                });
-                res.send(response[0][0]);
+            if (!req.params.id) {
+                // SELECT ALL CONVERSATIONS
+                try {
+                    const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll');
+                    res.send(selectAll[0]);
+                }
+                catch (error) {
+                    res.status(500).send(error);
+                }
             }
-            catch (error) {
-                console.log(error);
+            else {
+                // SELECT CONVERSATION BY ID
+                try {
+                    const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
+                        replacements: {
+                            conversationId: req.body.conversationId,
+                        }
+                    });
+                    res.send(response[0][0]);
+                }
+                catch (error) {
+                    res.status(500).send(error);
+                    console.log(error);
+                }
             }
             break;
         // CREATE NEW CONVERSATION
@@ -38,6 +52,7 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
                 res.send(`Conversation with name ${req.body.name} created successfully`);
             }
             catch (error) {
+                res.status(500).send(error);
                 console.log(error);
             }
             break;
@@ -53,6 +68,7 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
                 res.send(`Conversation ${req.body.name} updated successfully`);
             }
             catch (error) {
+                res.status(500).send(error);
                 console.log(error);
             }
             break;
@@ -67,10 +83,12 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
                 res.send(`Conversation ${req.body.conversationId} deleted successfully`);
             }
             catch (error) {
+                res.status(500).send(error);
                 console.log(error);
             }
             break;
         default:
+            res.status(500).send('Please provide appropriate HTTP request type');
             break;
     }
 });
