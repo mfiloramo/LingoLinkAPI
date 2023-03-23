@@ -5,7 +5,7 @@ export const participantsController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT PARTICIPANT
     case 'GET':
-      if (!req.params.id) {
+      if (!req.body.selector) {
         // SELECT ALL PARTICIPANTS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_SelectAll')

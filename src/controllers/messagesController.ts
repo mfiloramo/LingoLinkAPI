@@ -6,16 +6,16 @@ export const messagesController = async (req: Request, res: Response, next: Next
   switch (req.method) {
     // SELECT MESSAGE
     case 'GET':
-      if (!req.params.id) {
+      if (!req.body.conversationId) {
         // SELECT ALL MESSAGES
         try {
-          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
+          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll')
           res.send(selectAll[0]);
         } catch (error: any) {
           res.status(500).send(error);
         }
       } else {
-        // SELECT MESSAGE BY ID
+        // SELECT MESSAGE BY CONVERSATION ID
         try {
           const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
             replacements: {
@@ -67,7 +67,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
       }
       break;
 
-    // DELETE EXISTING MESSAGE BY ID
+    // DELETE EXISTING MESSAGE BY MESSAGE ID
     case 'DELETE':
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :messageId', {

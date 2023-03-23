@@ -14,7 +14,7 @@ const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection"
 const usersController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     switch (req.method) {
         case 'GET':
-            if (!req.params.id) {
+            if (!req.body.userId) {
                 // SELECT ALL USERS
                 try {
                     const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll');

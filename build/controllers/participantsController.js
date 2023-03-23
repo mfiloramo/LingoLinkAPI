@@ -15,7 +15,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
     switch (req.method) {
         // SELECT PARTICIPANT
         case 'GET':
-            if (!req.params.id) {
+            if (!req.body.selector) {
                 // SELECT ALL PARTICIPANTS
                 try {
                     const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_SelectAll');

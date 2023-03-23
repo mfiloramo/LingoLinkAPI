@@ -5,7 +5,7 @@ import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 export const usersController = async (req: Request, res: Response, next: NextFunction) => {
   switch (req.method) {
     case 'GET':
-      if (!req.params.id) {
+      if (!req.body.userId) {
         // SELECT ALL USERS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll')

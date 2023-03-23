@@ -6,7 +6,7 @@ export const conversationsController = async (req: Request, res: Response, next:
   switch (req.method) {
     // SELECT CONVERSATION
     case 'GET':
-      if (!req.params.id) {
+      if (!req.body.conversationId) {
         // SELECT ALL CONVERSATIONS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')

@@ -15,7 +15,7 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
     switch (req.method) {
         // SELECT CONVERSATION
         case 'GET':
-            if (!req.params.id) {
+            if (!req.body.conversationId) {
                 // SELECT ALL CONVERSATIONS
                 try {
                     const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll');
