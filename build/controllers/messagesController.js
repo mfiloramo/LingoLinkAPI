@@ -15,7 +15,7 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
     switch (req.method) {
         // SELECT MESSAGE
         case 'GET':
-            if (!req.body.conversationId) {
+            if (!req.params.id) {
                 // SELECT ALL MESSAGES
                 try {
                     const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll');
@@ -28,14 +28,12 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
             else {
                 // SELECT MESSAGE BY CONVERSATION ID
                 try {
-                    const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
+                    const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
                         replacements: {
-                            conversationId: req.body.conversationId,
-                            limit: req.body.limit,
-                            offset: req.body.offset
+                            conversationId: req.params.id
                         }
                     });
-                    res.send(response[0][0]);
+                    res.json(response[0]);
                 }
                 catch (error) {
                     res.status(500).send(error);
@@ -51,10 +49,10 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                         conversationId: req.body.conversationId,
                         userId: req.body.userId,
                         content: req.body.content,
-                        timestamp: new Date()
+                        timestamp: new Date().toISOString()
                     }
                 });
-                res.send(`Message with conversationId ${req.body.conversationId} created successfully`);
+                res.json(`Message with conversationId ${req.body.conversationId} created successfully`);
             }
             catch (error) {
                 res.status(500).send(error);

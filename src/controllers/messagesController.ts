@@ -6,7 +6,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
   switch (req.method) {
     // SELECT MESSAGE
     case 'GET':
-      if (!req.body.conversationId) {
+      if (!req.params.id) {
         // SELECT ALL MESSAGES
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll')
@@ -17,14 +17,12 @@ export const messagesController = async (req: Request, res: Response, next: Next
       } else {
         // SELECT MESSAGE BY CONVERSATION ID
         try {
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
+          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
             replacements: {
-              conversationId: req.body.conversationId,
-              limit: req.body.limit,
-              offset: req.body.offset
+              conversationId: req.params.id
             }
           })
-          res.send(response[0][0]);
+          res.json(response[0]);
         } catch (error: any) {
           res.status(500).send(error);
           console.log(error);
@@ -40,10 +38,10 @@ export const messagesController = async (req: Request, res: Response, next: Next
             conversationId: req.body.conversationId,
             userId: req.body.userId,
             content: req.body.content,
-            timestamp: new Date()
+            timestamp: new Date().toISOString()
           }
         })
-        res.send(`Message with conversationId ${req.body.conversationId} created successfully`);
+        res.json(`Message with conversationId ${req.body.conversationId} created successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);

@@ -1,16 +1,23 @@
-import { Request, Response, NextFunction } from 'express';
-import {wcCoreMSQLConnection} from "../config/database/wcCoreMSQLConnection";
+import { Request, Response } from 'express';
+import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const conversationsController = async (req: Request, res: Response, next: NextFunction) => {
+export const conversationsController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT CONVERSATION
     case 'GET':
       if (!req.body.conversationId) {
         // SELECT ALL CONVERSATIONS
         try {
-          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
-          res.send(selectAll[0]);
+          // const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
+          console.log(req.params.id)
+          const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_GetConversationsByUserId :userId',
+            {
+              replacements: {
+                userId: req.params.id
+              }
+            }).catch((err: any) => console.log(err));
+          res.json(selectAll[0])
         } catch (error: any) {
           res.status(500).send(error);
         }
@@ -19,7 +26,7 @@ export const conversationsController = async (req: Request, res: Response, next:
         try {
           const response = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
             replacements: {
-              conversationId: req.body.conversationId,
+              conversationId: req.params.id
             }
           })
           res.send(response[0][0]);
@@ -33,12 +40,13 @@ export const conversationsController = async (req: Request, res: Response, next:
     // CREATE NEW CONVERSATION
     case 'POST':
       try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name',  {
+        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name',  {
           replacements: {
             name: req.body.name,
           }
         })
-        res.send(`Conversation with name ${req.body.name} created successfully`);
+        res.send(conversationId[0][0]);
+        // res.json(`Conversation with name ${req.body.name} created successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);

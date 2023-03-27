@@ -9,7 +9,7 @@ export const usersController = async (req: Request, res: Response, next: NextFun
         // SELECT ALL USERS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll')
-          res.send(selectAll[0]);
+          res.send(selectAll[0][0]); // TODO: CHANGE BACK TO ARRAY (REMOVE 1 [0])
         } catch (error: any) {
           res.status(500).send(error);
         }

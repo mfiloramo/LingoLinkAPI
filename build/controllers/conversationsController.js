@@ -11,15 +11,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.conversationsController = void 0;
 const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
-const conversationsController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const conversationsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     switch (req.method) {
         // SELECT CONVERSATION
         case 'GET':
             if (!req.body.conversationId) {
                 // SELECT ALL CONVERSATIONS
                 try {
-                    const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll');
-                    res.send(selectAll[0]);
+                    // const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
+                    console.log(req.params.id);
+                    const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_GetConversationsByUserId :userId', {
+                        replacements: {
+                            userId: req.params.id
+                        }
+                    }).catch((err) => console.log(err));
+                    res.json(selectAll[0]);
                 }
                 catch (error) {
                     res.status(500).send(error);
@@ -30,7 +36,7 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
                 try {
                     const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
                         replacements: {
-                            conversationId: req.body.conversationId,
+                            conversationId: req.params.id
                         }
                     });
                     res.send(response[0][0]);
@@ -44,12 +50,13 @@ const conversationsController = (req, res, next) => __awaiter(void 0, void 0, vo
         // CREATE NEW CONVERSATION
         case 'POST':
             try {
-                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name', {
+                const conversationId = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name', {
                     replacements: {
                         name: req.body.name,
                     }
                 });
-                res.send(`Conversation with name ${req.body.name} created successfully`);
+                res.send(conversationId[0][0]);
+                // res.json(`Conversation with name ${req.body.name} created successfully`);
             }
             catch (error) {
                 res.status(500).send(error);

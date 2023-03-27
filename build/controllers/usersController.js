@@ -18,7 +18,7 @@ const usersController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                 // SELECT ALL USERS
                 try {
                     const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll');
-                    res.send(selectAll[0]);
+                    res.send(selectAll[0][0]); // TODO: CHANGE BACK TO ARRAY (REMOVE 1 [0])
                 }
                 catch (error) {
                     res.status(500).send(error);
