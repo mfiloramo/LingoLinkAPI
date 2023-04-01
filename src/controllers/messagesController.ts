@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const messagesController = async (req: Request, res: Response, next: NextFunction) => {
+export const messagesController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT MESSAGE
     case 'GET':
@@ -15,7 +15,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
           res.status(500).send(error);
         }
       } else {
-        // SELECT MESSAGE BY CONVERSATION ID
+        // SELECT MESSAGES BY CONVERSATION ID
         try {
           const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
             replacements: {
@@ -55,10 +55,10 @@ export const messagesController = async (req: Request, res: Response, next: Next
           replacements: {
             messageId: req.body.messageId,
             content: req.body.content,
-            timestamp: new Date(),
+            timestamp: new Date().toISOString(),
           }
         })
-        res.send(`Message ${req.body.messageId} updated successfully`);
+        res.json(`Message ${req.body.messageId} updated successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -73,7 +73,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
             messageId: req.body.messageId,
           }
         })
-        res.send(`Message ${req.body.messageId} deleted successfully`);
+        res.json(`Message ${req.body.messageId} deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);

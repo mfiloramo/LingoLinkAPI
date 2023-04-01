@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usersController = void 0;
 const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
-const usersController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const usersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     switch (req.method) {
         case 'GET':
             if (!req.body.userId) {
@@ -68,7 +68,7 @@ const usersController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                         password: req.body.password,
                     }
                 });
-                res.send(`User ${req.body.username} updated successfully`);
+                res.json(`User ${req.body.username} updated successfully`);
             }
             catch (error) {
                 res.status(500).send(error);
@@ -83,7 +83,7 @@ const usersController = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
                         userId: req.body.userId,
                     }
                 });
-                res.send(`User ${req.body.userId} deleted successfully`);
+                res.json(`User ${req.body.userId} deleted successfully`);
             }
             catch (error) {
                 res.status(500).send(error);

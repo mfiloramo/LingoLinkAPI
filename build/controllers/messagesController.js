@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messagesController = void 0;
 const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
-const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const messagesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     switch (req.method) {
         // SELECT MESSAGE
         case 'GET':
@@ -26,7 +26,7 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                 }
             }
             else {
-                // SELECT MESSAGE BY CONVERSATION ID
+                // SELECT MESSAGES BY CONVERSATION ID
                 try {
                     const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
                         replacements: {
@@ -66,10 +66,10 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                     replacements: {
                         messageId: req.body.messageId,
                         content: req.body.content,
-                        timestamp: new Date(),
+                        timestamp: new Date().toISOString(),
                     }
                 });
-                res.send(`Message ${req.body.messageId} updated successfully`);
+                res.json(`Message ${req.body.messageId} updated successfully`);
             }
             catch (error) {
                 res.status(500).send(error);
@@ -84,7 +84,7 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                         messageId: req.body.messageId,
                     }
                 });
-                res.send(`Message ${req.body.messageId} deleted successfully`);
+                res.json(`Message ${req.body.messageId} deleted successfully`);
             }
             catch (error) {
                 res.status(500).send(error);

@@ -6,12 +6,10 @@ export const conversationsController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT CONVERSATION
     case 'GET':
-      if (!req.body.conversationId) {
+      if (!req.params.id) {
         // SELECT ALL CONVERSATIONS
         try {
-          // const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
-          console.log(req.params.id)
-          const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_GetConversationsByUserId :userId',
+          const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll',
             {
               replacements: {
                 userId: req.params.id
@@ -24,12 +22,12 @@ export const conversationsController = async (req: Request, res: Response) => {
       } else {
         // SELECT CONVERSATION BY ID
         try {
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
+          const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select_UserId :userId', {
             replacements: {
-              conversationId: req.params.id
+              userId: req.params.id
             }
           })
-          res.send(response[0][0]);
+          res.send(response[0]);
         } catch (error: any) {
           res.status(500).send(error);
           console.log(error);
@@ -45,7 +43,7 @@ export const conversationsController = async (req: Request, res: Response) => {
             name: req.body.name,
           }
         })
-        res.send(conversationId[0][0]);
+        res.json(conversationId[0][0]);
         // res.json(`Conversation with name ${req.body.name} created successfully`);
       } catch (error: any) {
         res.status(500).send(error);
@@ -62,7 +60,7 @@ export const conversationsController = async (req: Request, res: Response) => {
             name: req.body.name,
           }
         })
-        res.send(`Conversation ${req.body.name} updated successfully`);
+        res.json(`Conversation ${req.body.name} updated successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -77,7 +75,7 @@ export const conversationsController = async (req: Request, res: Response) => {
             conversationId: req.body.conversationId,
           }
         })
-        res.send(`Conversation ${req.body.conversationId} deleted successfully`);
+        res.json(`Conversation ${req.body.conversationId} deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
