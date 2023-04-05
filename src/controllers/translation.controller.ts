@@ -6,7 +6,7 @@ export class TranslationController {
     static async translateText(req: Request, res: Response): Promise<any> {
         // DEFINE ENCODED HTTP REQUEST PARAMETERS
         const params = {
-            q: req.body.inputText,
+            q: req.body.content,
             target: req.body.targLang,
             source: req.body.srcLang
         };
@@ -30,6 +30,7 @@ export class TranslationController {
         axios
           .request(options)
           .then((response: any) => {
+              console.log('tomato', response.data.data.translations[0].translatedText)
               res.json(response.data.data.translations[0].translatedText);
           })
           .catch((error: any) => {

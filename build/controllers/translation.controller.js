@@ -19,7 +19,7 @@ class TranslationController {
         return __awaiter(this, void 0, void 0, function* () {
             // DEFINE ENCODED HTTP REQUEST PARAMETERS
             const params = {
-                q: req.body.inputText,
+                q: req.body.content,
                 target: req.body.targLang,
                 source: req.body.srcLang
             };
@@ -40,6 +40,7 @@ class TranslationController {
             axios_1.default
                 .request(options)
                 .then((response) => {
+                console.log('tomato', response.data.data.translations[0].translatedText);
                 res.json(response.data.data.translations[0].translatedText);
             })
                 .catch((error) => {

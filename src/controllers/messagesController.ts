@@ -33,11 +33,12 @@ export const messagesController = async (req: Request, res: Response) => {
     // CREATE NEW MESSAGE
     case 'POST':
       try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :timestamp',  {
+        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp',  {
           replacements: {
             conversationId: req.body.conversationId,
             userId: req.body.userId,
             content: req.body.content,
+            srcLang: req.body.srcLang,
             timestamp: new Date().toISOString()
           }
         })
@@ -51,10 +52,11 @@ export const messagesController = async (req: Request, res: Response) => {
     // UPDATE EXISTING MESSAGE
     case 'PUT':
       try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :timestamp', {
+        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :srcLang, :timestamp', {
           replacements: {
             messageId: req.body.messageId,
             content: req.body.content,
+            srcLang: req.body.srcLang,
             timestamp: new Date().toISOString(),
           }
         })

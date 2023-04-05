@@ -38,13 +38,13 @@ export const conversationsController = async (req: Request, res: Response) => {
     // CREATE NEW CONVERSATION
     case 'POST':
       try {
-        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name',  {
+        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create.sql :name',  {
           replacements: {
             name: req.body.name,
           }
         })
+        // RETURN NEW CONVERSATION ID
         res.json(conversationId[0][0]);
-        // res.json(`Conversation with name ${req.body.name} created successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -86,5 +86,6 @@ export const conversationsController = async (req: Request, res: Response) => {
     default:
       res.status(500).send('Please provide appropriate HTTP request type');
       break;
-  }}
+  }
+}
 
