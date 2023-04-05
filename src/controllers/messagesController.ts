@@ -1,12 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const messagesController = async (req: Request, res: Response, next: NextFunction) => {
+export const messagesController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT MESSAGE
     case 'GET':
-      if (!req.body.conversationId) {
+      if (!req.params.id) {
         // SELECT ALL MESSAGES
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll')
@@ -15,16 +15,14 @@ export const messagesController = async (req: Request, res: Response, next: Next
           res.status(500).send(error);
         }
       } else {
-        // SELECT MESSAGE BY CONVERSATION ID
+        // SELECT MESSAGES BY CONVERSATION ID
         try {
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
+          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
             replacements: {
-              conversationId: req.body.conversationId,
-              limit: req.body.limit,
-              offset: req.body.offset
+              conversationId: req.params.id
             }
           })
-          res.send(response[0][0]);
+          res.json(response[0]);
         } catch (error: any) {
           res.status(500).send(error);
           console.log(error);
@@ -35,15 +33,16 @@ export const messagesController = async (req: Request, res: Response, next: Next
     // CREATE NEW MESSAGE
     case 'POST':
       try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :timestamp',  {
+        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp',  {
           replacements: {
             conversationId: req.body.conversationId,
             userId: req.body.userId,
             content: req.body.content,
-            timestamp: new Date()
+            srcLang: req.body.srcLang,
+            timestamp: new Date().toISOString()
           }
         })
-        res.send(`Message with conversationId ${req.body.conversationId} created successfully`);
+        res.json(`Message with conversationId ${req.body.conversationId} created successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -53,14 +52,15 @@ export const messagesController = async (req: Request, res: Response, next: Next
     // UPDATE EXISTING MESSAGE
     case 'PUT':
       try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :timestamp', {
+        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :srcLang, :timestamp', {
           replacements: {
             messageId: req.body.messageId,
             content: req.body.content,
-            timestamp: new Date(),
+            srcLang: req.body.srcLang,
+            timestamp: new Date().toISOString(),
           }
         })
-        res.send(`Message ${req.body.messageId} updated successfully`);
+        res.json(`Message ${req.body.messageId} updated successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -75,7 +75,7 @@ export const messagesController = async (req: Request, res: Response, next: Next
             messageId: req.body.messageId,
           }
         })
-        res.send(`Message ${req.body.messageId} deleted successfully`);
+        res.json(`Message ${req.body.messageId} deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);

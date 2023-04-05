@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const usersController = async (req: Request, res: Response, next: NextFunction) => {
+export const usersController = async (req: Request, res: Response) => {
   switch (req.method) {
     case 'GET':
       if (!req.body.userId) {
         // SELECT ALL USERS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll')
-          res.send(selectAll[0]);
+          res.send(selectAll[0][0]); // TODO: CHANGE BACK TO ARRAY (REMOVE 1 [0])
         } catch (error: any) {
           res.status(500).send(error);
         }
@@ -57,7 +57,7 @@ export const usersController = async (req: Request, res: Response, next: NextFun
             password: req.body.password,
           }
         })
-        res.send(`User ${req.body.username} updated successfully`);
+        res.json(`User ${req.body.username} updated successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -72,7 +72,7 @@ export const usersController = async (req: Request, res: Response, next: NextFun
             userId: req.body.userId,
           }
         })
-        res.send(`User ${req.body.userId} deleted successfully`);
+        res.json(`User ${req.body.userId} deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);

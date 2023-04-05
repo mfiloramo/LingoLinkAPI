@@ -11,11 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.messagesController = void 0;
 const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
-const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const messagesController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     switch (req.method) {
         // SELECT MESSAGE
         case 'GET':
-            if (!req.body.conversationId) {
+            if (!req.params.id) {
                 // SELECT ALL MESSAGES
                 try {
                     const selectAll = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll');
@@ -26,16 +26,14 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                 }
             }
             else {
-                // SELECT MESSAGE BY CONVERSATION ID
+                // SELECT MESSAGES BY CONVERSATION ID
                 try {
-                    const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId, :limit, :offset', {
+                    const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
                         replacements: {
-                            conversationId: req.body.conversationId,
-                            limit: req.body.limit,
-                            offset: req.body.offset
+                            conversationId: req.params.id
                         }
                     });
-                    res.send(response[0][0]);
+                    res.json(response[0]);
                 }
                 catch (error) {
                     res.status(500).send(error);
@@ -46,15 +44,16 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
         // CREATE NEW MESSAGE
         case 'POST':
             try {
-                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :timestamp', {
+                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp', {
                     replacements: {
                         conversationId: req.body.conversationId,
                         userId: req.body.userId,
                         content: req.body.content,
-                        timestamp: new Date()
+                        srcLang: req.body.srcLang,
+                        timestamp: new Date().toISOString()
                     }
                 });
-                res.send(`Message with conversationId ${req.body.conversationId} created successfully`);
+                res.json(`Message with conversationId ${req.body.conversationId} created successfully`);
             }
             catch (error) {
                 res.status(500).send(error);
@@ -64,14 +63,15 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
         // UPDATE EXISTING MESSAGE
         case 'PUT':
             try {
-                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :timestamp', {
+                yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :srcLang, :timestamp', {
                     replacements: {
                         messageId: req.body.messageId,
                         content: req.body.content,
-                        timestamp: new Date(),
+                        srcLang: req.body.srcLang,
+                        timestamp: new Date().toISOString(),
                     }
                 });
-                res.send(`Message ${req.body.messageId} updated successfully`);
+                res.json(`Message ${req.body.messageId} updated successfully`);
             }
             catch (error) {
                 res.status(500).send(error);
@@ -86,7 +86,7 @@ const messagesController = (req, res, next) => __awaiter(void 0, void 0, void 0,
                         messageId: req.body.messageId,
                     }
                 });
-                res.send(`Message ${req.body.messageId} deleted successfully`);
+                res.json(`Message ${req.body.messageId} deleted successfully`);
             }
             catch (error) {
                 res.status(500).send(error);

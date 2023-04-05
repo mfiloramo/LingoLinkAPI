@@ -1,28 +1,33 @@
-import { Request, Response, NextFunction } from 'express';
-import {wcCoreMSQLConnection} from "../config/database/wcCoreMSQLConnection";
+import { Request, Response } from 'express';
+import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const conversationsController = async (req: Request, res: Response, next: NextFunction) => {
+export const conversationsController = async (req: Request, res: Response) => {
   switch (req.method) {
     // SELECT CONVERSATION
     case 'GET':
-      if (!req.body.conversationId) {
+      if (!req.params.id) {
         // SELECT ALL CONVERSATIONS
         try {
-          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
-          res.send(selectAll[0]);
+          const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll',
+            {
+              replacements: {
+                userId: req.params.id
+              }
+            }).catch((err: any) => console.log(err));
+          res.json(selectAll[0])
         } catch (error: any) {
           res.status(500).send(error);
         }
       } else {
         // SELECT CONVERSATION BY ID
         try {
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select :conversationId', {
+          const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select_UserId :userId', {
             replacements: {
-              conversationId: req.body.conversationId,
+              userId: req.params.id
             }
           })
-          res.send(response[0][0]);
+          res.send(response[0]);
         } catch (error: any) {
           res.status(500).send(error);
           console.log(error);
@@ -33,12 +38,13 @@ export const conversationsController = async (req: Request, res: Response, next:
     // CREATE NEW CONVERSATION
     case 'POST':
       try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name',  {
+        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create.sql :name',  {
           replacements: {
             name: req.body.name,
           }
         })
-        res.send(`Conversation with name ${req.body.name} created successfully`);
+        // RETURN NEW CONVERSATION ID
+        res.json(conversationId[0][0]);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -54,7 +60,7 @@ export const conversationsController = async (req: Request, res: Response, next:
             name: req.body.name,
           }
         })
-        res.send(`Conversation ${req.body.name} updated successfully`);
+        res.json(`Conversation ${req.body.name} updated successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -69,7 +75,7 @@ export const conversationsController = async (req: Request, res: Response, next:
             conversationId: req.body.conversationId,
           }
         })
-        res.send(`Conversation ${req.body.conversationId} deleted successfully`);
+        res.json(`Conversation ${req.body.conversationId} deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -80,5 +86,6 @@ export const conversationsController = async (req: Request, res: Response, next:
     default:
       res.status(500).send('Please provide appropriate HTTP request type');
       break;
-  }}
+  }
+}
 
