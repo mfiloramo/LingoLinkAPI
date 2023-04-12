@@ -35,10 +35,10 @@ export const messagesController = async (req: Request, res: Response) => {
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp',  {
           replacements: {
-            conversationId: req.body.conversationId,
-            userId: req.body.userId,
+            conversationId: req.body.conversation_id,
+            userId: req.body.user_id,
             content: req.body.content,
-            srcLang: req.body.srcLang,
+            srcLang: req.body.source_language,
             timestamp: new Date().toISOString()
           }
         })
@@ -88,4 +88,3 @@ export const messagesController = async (req: Request, res: Response) => {
       break;
   }
 }
-

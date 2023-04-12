@@ -8,9 +8,8 @@ export class TranslationController {
         const params = {
             q: req.body.content,
             target: req.body.targLang,
-            source: req.body.srcLang
+            source: req.body.source_language
         };
-
         const encodedParams = new URLSearchParams(params);
 
         // CONFIGURE REQUEST OPTIONS
@@ -30,7 +29,6 @@ export class TranslationController {
         axios
           .request(options)
           .then((response: any) => {
-              console.log('tomato', response.data.data.translations[0].translatedText)
               res.json(response.data.data.translations[0].translatedText);
           })
           .catch((error: any) => {
