@@ -38,7 +38,7 @@ export const conversationsController = async (req: Request, res: Response) => {
     // CREATE NEW CONVERSATION
     case 'POST':
       try {
-        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create.sql :name',  {
+        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name',  {
           replacements: {
             name: req.body.name,
           }
@@ -88,4 +88,3 @@ export const conversationsController = async (req: Request, res: Response) => {
       break;
   }
 }
-

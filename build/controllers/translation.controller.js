@@ -21,7 +21,7 @@ class TranslationController {
             const params = {
                 q: req.body.content,
                 target: req.body.targLang,
-                source: req.body.srcLang
+                source: req.body.source_language
             };
             const encodedParams = new URLSearchParams(params);
             // CONFIGURE REQUEST OPTIONS
@@ -40,7 +40,6 @@ class TranslationController {
             axios_1.default
                 .request(options)
                 .then((response) => {
-                console.log('tomato', response.data.data.translations[0].translatedText);
                 res.json(response.data.data.translations[0].translatedText);
             })
                 .catch((error) => {

@@ -45,7 +45,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
                 try {
                     const response = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_UserId :userId', {
                         replacements: {
-                            userId: req.body.userId
+                            user_id: req.body.userId
                         }
                     });
                     res.send(response[0][0]);
@@ -61,7 +61,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
             try {
                 yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_Create :userId, :conversationId', {
                     replacements: {
-                        userId: req.body.userId,
+                        user_id: req.body.userId,
                         conversationId: req.body.conversationId,
                     }
                 });
@@ -81,7 +81,7 @@ const participantsController = (req, res) => __awaiter(void 0, void 0, void 0, f
             try {
                 yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Participant_Delete :userId, :conversationId', {
                     replacements: {
-                        userId: req.body.userId,
+                        user_id: req.body.userId,
                         conversationId: req.body.conversationId,
                     }
                 });

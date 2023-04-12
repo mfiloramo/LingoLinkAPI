@@ -46,10 +46,10 @@ const messagesController = (req, res) => __awaiter(void 0, void 0, void 0, funct
             try {
                 yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp', {
                     replacements: {
-                        conversationId: req.body.conversationId,
-                        userId: req.body.userId,
+                        conversationId: req.body.conversation_id,
+                        userId: req.body.user_id,
                         content: req.body.content,
-                        srcLang: req.body.srcLang,
+                        srcLang: req.body.source_language,
                         timestamp: new Date().toISOString()
                     }
                 });

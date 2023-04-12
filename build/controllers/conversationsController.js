@@ -48,7 +48,7 @@ const conversationsController = (req, res) => __awaiter(void 0, void 0, void 0, 
         // CREATE NEW CONVERSATION
         case 'POST':
             try {
-                const conversationId = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create.sql :name', {
+                const conversationId = yield wcCoreMSQLConnection_1.wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name', {
                     replacements: {
                         name: req.body.name,
                     }
