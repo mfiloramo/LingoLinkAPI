@@ -14,6 +14,7 @@ const usersRouter_1 = require("./routes/usersRouter");
 const participantsRouter_1 = require("./routes/participantsRouter");
 const messagesRouter_1 = require("./routes/messagesRouter");
 const conversationsRouter_1 = require("./routes/conversationsRouter");
+const validateAccessToken_1 = require("./middleware/validateAccessToken");
 // GLOBAL VARIABLES
 const app = (0, express_1.default)();
 const wss = new ws_1.default.Server({ port: 8080 });
@@ -30,8 +31,8 @@ app
     .use(express_1.default.urlencoded({ extended: false }))
     .use(body_parser_1.default.urlencoded({ extended: true }))
     .use((0, cors_1.default)(corsOptions));
-// TODO: ROUTE PROTECTION (PASSPORT, MSAL)
-// ...
+// ROUTE PROTECTION (MSAL)
+app.use(validateAccessToken_1.validateAccessToken);
 // APPLICATION ENDPOINTS
 app.use('/api/translate', translationRouter_1.translationRouter);
 app.use('/api/users', usersRouter_1.usersRouter);
