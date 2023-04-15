@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
+import jwt from 'jsonwebtoken';
 
 
 export const usersController = async (req: Request, res: Response) => {
@@ -31,18 +32,41 @@ export const usersController = async (req: Request, res: Response) => {
 
     // CREATE NEW USER
     case 'POST':
-      try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password', {
-          replacements: {
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password
+      if (req.body.token) {
+        try {
+          const decodedToken = jwt.decode(req.body.token) as any;
+          const userId = decodedToken.oid;
+
+          // SELECT USER BY ID
+          const response = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
+            replacements: {
+              userId,
+            },
+          });
+
+          if (response[0][0]) {
+            res.send({success: true, user: response[0][0]});
+          } else {
+            res.status(404).send({success: false, message: 'User not found'});
           }
-        })
-        res.send(`User ${req.body.username} created successfully`);
-      } catch (error: any) {
-        res.status(500).send(error);
-        console.log(error);
+        } catch (error: any) {
+          res.status(500).send(error);
+          console.log(error);
+        }
+      } else {
+        try {
+          await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password', {
+            replacements: {
+              username: req.body.username,
+              email: req.body.email,
+              password: req.body.password
+            }
+          })
+          res.send(`User ${req.body.username} created successfully`);
+        } catch (error: any) {
+          res.status(500).send(error);
+          console.log(error);
+        }
       }
       break;
 
@@ -85,4 +109,3 @@ export const usersController = async (req: Request, res: Response) => {
       break;
   }
 }
-

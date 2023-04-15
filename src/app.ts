@@ -1,7 +1,6 @@
 // MODULE IMPORTS
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import WebSocket from 'ws';
 
@@ -11,6 +10,7 @@ import { usersRouter } from "./routes/usersRouter";
 import { participantsRouter } from "./routes/participantsRouter";
 import { messagesRouter } from "./routes/messagesRouter";
 import { conversationsRouter } from "./routes/conversationsRouter";
+import { validateAccessToken } from './middleware/validateAccessToken';
 
 // GLOBAL VARIABLES
 const app = express();
@@ -31,8 +31,8 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .use(cors(corsOptions))
 
-// TODO: ROUTE PROTECTION (PASSPORT, MSAL)
-// ...
+// ROUTE PROTECTION (MSAL)
+app.use(validateAccessToken);
 
 // APPLICATION ENDPOINTS
 app.use('/api/translate', translationRouter);
