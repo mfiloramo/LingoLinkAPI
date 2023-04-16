@@ -27,15 +27,15 @@ exports.msalNodeConfig = void 0;
 const msal_node_1 = require("@azure/msal-node");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
-const AZ_CLIENT = process.env['AZ_CLIENT_API'];
+const AZ_CLIENT_API = process.env['AZ_CLIENT_API'];
 const AZ_TENANT = process.env['AZ_TENANT'];
 const AZ_SECRET_VAL = process.env['AZ_SECRET_VAL'];
-if (!AZ_CLIENT || !AZ_TENANT || !AZ_SECRET_VAL) {
+if (!AZ_CLIENT_API || !AZ_TENANT || !AZ_SECRET_VAL) {
     throw new Error('AZ_CLIENT, AZ_TENANT, and AZ_CLIENT_SECRET must be defined in the environment variables.');
 }
 exports.msalNodeConfig = {
     auth: {
-        clientId: AZ_CLIENT,
+        clientId: AZ_CLIENT_API,
         authority: AZ_TENANT,
         clientSecret: AZ_SECRET_VAL,
     },

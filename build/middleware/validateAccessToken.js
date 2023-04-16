@@ -13,13 +13,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateAccessToken = void 0;
-const msal_node_1 = require("@azure/msal-node");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const jwks_rsa_1 = __importDefault(require("jwks-rsa"));
 const msalNodeConfig_1 = require("../config/msalAuth/msalNodeConfig");
-const msalInstance = new msal_node_1.ConfidentialClientApplication(msalNodeConfig_1.msalNodeConfig);
+const jwksUri = `https://login.microsoftonline.com/${msalNodeConfig_1.msalNodeConfig.auth.authority}/discovery/keys`;
+const client = (0, jwks_rsa_1.default)({
+    jwksUri,
+    cache: true,
+});
+function getKey(header, callback) {
+    client.getSigningKey(header.kid, (error, key) => {
+        const signingKey = key.publicKey || key.rsaPublicKey;
+        callback(null, signingKey);
+    });
+}
 function validateAccessToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log('validateAccessToken pinged...');
             const authHeader = req.headers.authorization;
             if (!authHeader) {
                 return res.status(401).send('Authorization header is missing');
@@ -28,26 +39,17 @@ function validateAccessToken(req, res, next) {
             if (bearer !== 'Bearer' || !token) {
                 return res.status(401).send('Authorization header has an incorrect format');
             }
-            let decodedToken;
-            try {
-                decodedToken = jsonwebtoken_1.default.decode(token);
-            }
-            catch (error) {
-                return res.status(401).send('Error decoding access token');
-            }
-            const validationParams = {
-                clientId: msalNodeConfig_1.msalNodeConfig.auth.clientId,
-                scopes: decodedToken.scopes.split(' '),
-                authority: msalNodeConfig_1.msalNodeConfig.auth.authority,
-            };
-            yield msalInstance.acquireTokenOnBehalfOf({
-                oboAssertion: token,
-                scopes: validationParams.scopes,
-                authority: validationParams.authority,
+            jsonwebtoken_1.default.verify(token, getKey, { audience: msalNodeConfig_1.msalNodeConfig.auth.clientId }, (err, decodedToken) => {
+                if (err) {
+                    console.log('Token validation failed:', err);
+                    return res.status(401).send('Invalid access token');
+                }
+                req.user = decodedToken;
+                next();
             });
-            next();
         }
         catch (error) {
+            console.log('error!');
             res.status(401).send('Invalid access token');
         }
     });
