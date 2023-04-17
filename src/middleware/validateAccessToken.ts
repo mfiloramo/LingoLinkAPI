@@ -19,7 +19,6 @@ function getKey(header: any, callback: (arg0: null, arg1: any) => void) {
 
 export async function validateAccessToken(req: any, res: Response, next: NextFunction) {
   try {
-    console.log('validateAccessToken pinged...');
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       return res.status(401).send('Authorization header is missing');
