@@ -1,6 +1,6 @@
-# WorldChat
+# LingoLink
 
-WorldChat is a messaging application that allows users to communicate with others regardless of the language they speak. With the app's integration of Google Translate API, users can send and receive messages in their own language while the app automatically translates the messages in real-time for the other party. 
+LingoLink is a messaging application that allows users to communicate with others regardless of the language they speak. With the app's integration of Google Translate API, users can send and receive messages in their own language while the app automatically translates the messages in real-time for the other party. 
 
 ## Features
 
