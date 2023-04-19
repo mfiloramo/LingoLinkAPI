@@ -10,6 +10,7 @@ export class TranslationController {
             target: req.body.targLang,
             source: req.body.source_language
         };
+
         const encodedParams = new URLSearchParams(params);
 
         // CONFIGURE REQUEST OPTIONS
