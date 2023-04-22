@@ -3,6 +3,7 @@ import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
 export const conversationsController = async (req: Request, res: Response) => {
+  console.log('ping controller')
   switch (req.method) {
     // SELECT CONVERSATION
     case 'GET':
