@@ -32,7 +32,7 @@ app
     .use(express_1.default.json())
     .use(express_1.default.urlencoded({ extended: false }))
     .use(body_parser_1.default.urlencoded({ extended: true }))
-    .use((0, cors_1.default)(corsOptions));
+    .use((0, cors_1.default)());
 // APPLICATION ENDPOINTS
 app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
 app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
