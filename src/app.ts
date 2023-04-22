@@ -33,11 +33,11 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
 
 // APPLICATION ENDPOINTS
-app.use('/api/translate', validateAccessToken, translationRouter);
-app.use('/api/users', validateAccessToken, usersRouter);
-app.use('/api/participants', validateAccessToken, participantsRouter);
-app.use('/api/messages', validateAccessToken, messagesRouter);
-app.use('/api/conversations', validateAccessToken, conversationsRouter);
+app.use('/api/translate', translationRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/participants', participantsRouter);
+app.use('/api/messages', messagesRouter);
+app.use('/api/conversations', conversationsRouter);
 
 // WEBSOCKET SERVER
 wss.on('connection', (ws) => {
