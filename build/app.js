@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // MODULE IMPORTS
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 const ws_1 = __importDefault(require("ws"));
 // ROUTE IMPORTS
 const translationRouter_1 = require("./routes/translationRouter");
@@ -13,6 +14,7 @@ const usersRouter_1 = require("./routes/usersRouter");
 const participantsRouter_1 = require("./routes/participantsRouter");
 const messagesRouter_1 = require("./routes/messagesRouter");
 const conversationsRouter_1 = require("./routes/conversationsRouter");
+const validateAccessToken_1 = require("./middleware/validateAccessToken");
 // GLOBAL VARIABLES
 const app = (0, express_1.default)();
 const wss = new ws_1.default.Server({ port: 8080 });
@@ -29,13 +31,14 @@ const corsOptions = {
 app
     .use(express_1.default.json())
     .use(express_1.default.urlencoded({ extended: false }))
-    .use(body_parser_1.default.urlencoded({ extended: true }));
+    .use(body_parser_1.default.urlencoded({ extended: true }))
+    .use((0, cors_1.default)(corsOptions));
 // APPLICATION ENDPOINTS
-app.use('/api/translate', translationRouter_1.translationRouter);
-app.use('/api/users', usersRouter_1.usersRouter);
-app.use('/api/participants', participantsRouter_1.participantsRouter);
-app.use('/api/messages', messagesRouter_1.messagesRouter);
-app.use('/api/conversations', conversationsRouter_1.conversationsRouter);
+app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
+app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
+app.use('/api/participants', validateAccessToken_1.validateAccessToken, participantsRouter_1.participantsRouter);
+app.use('/api/messages', validateAccessToken_1.validateAccessToken, messagesRouter_1.messagesRouter);
+app.use('/api/conversations', validateAccessToken_1.validateAccessToken, conversationsRouter_1.conversationsRouter);
 // WEBSOCKET SERVER
 wss.on('connection', (ws) => {
     // INDICATE CLIENT CONNECTION
