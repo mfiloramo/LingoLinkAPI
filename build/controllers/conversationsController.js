@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.conversationsController = void 0;
 const wcCoreMSQLConnection_1 = require("../config/database/wcCoreMSQLConnection");
 const conversationsController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log('ping controller');
     switch (req.method) {
         // SELECT CONVERSATION
         case 'GET':
