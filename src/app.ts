@@ -19,10 +19,11 @@ const PORT = 3000;
 
 // CORS OPTIONS
 const corsOptions: object = {
-  origin: 'http://localhost:4200',
+  origin: ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'],
   optionsSuccessStatus: 200,
   credentials: true
 };
+
 
 // APPLICATION DEPENDENCIES
 app
