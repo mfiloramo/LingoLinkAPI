@@ -1,7 +1,7 @@
 // MODULE IMPORTS
 import express, { Request, Response } from 'express';
-import cors from 'cors';
 import WebSocket from 'ws';
+import bodyParser from 'body-parser';
 
 // ROUTE IMPORTS
 import { translationRouter } from "./routes/translationRouter";
@@ -16,27 +16,22 @@ const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
 
-// CORS OPTIONS
-const corsOptions: object = {
-  origin: (origin: any, callback: any) => {
-    const allowedOrigins = ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'), false);
-    }
-  },
-  optionsSuccessStatus: 200,
-  credentials: true,
-  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
-};
-
 // APPLICATION DEPENDENCIES
 app
   .use(express.json())
-  .use(express.urlencoded({ extended: true }))
-  .use(cors(corsOptions));
+  .use(express.urlencoded({ extended: false }))
+  .use(bodyParser.urlencoded({ extended: true }))
+  .use((req: Request, res: Response, next: Function) => {
+    const allowedOrigins = ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'];
+    const origin = req.headers.origin;
+    if (origin && allowedOrigins.indexOf(origin as string) > -1) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,Origin,X-Requested-With,Accept');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+  });
 
 // APPLICATION ENDPOINTS
 app.use('/api/translate', validateAccessToken, translationRouter);
