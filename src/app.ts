@@ -64,7 +64,7 @@ wss.on('connection', (ws: any) => {
   console.log('Client connected...');
 
   // BROADCAST WEBSOCKET DATA TO CLIENTS
-  ws.on('message', (message) => {
+  ws.on('message', (message: any) => {
     wss.clients.forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
