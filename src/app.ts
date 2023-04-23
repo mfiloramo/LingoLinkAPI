@@ -1,6 +1,5 @@
 // MODULE IMPORTS
 import express, { Request, Response } from 'express';
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import WebSocket from 'ws';
 
@@ -15,7 +14,7 @@ import { validateAccessToken } from './middleware/validateAccessToken';
 // GLOBAL VARIABLES
 const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // CORS OPTIONS
 const corsOptions: object = {
@@ -29,8 +28,7 @@ const corsOptions: object = {
 // APPLICATION DEPENDENCIES
 app
   .use(express.json())
-  .use(express.urlencoded({ extended: false }))
-  .use(bodyParser.urlencoded({ extended: true }))
+  .use(express.urlencoded({ extended: true }))
   .use(cors(corsOptions));
 
 // APPLICATION ENDPOINTS
@@ -39,6 +37,11 @@ app.use('/api/users', validateAccessToken, usersRouter);
 app.use('/api/participants', validateAccessToken, participantsRouter);
 app.use('/api/messages', validateAccessToken, messagesRouter);
 app.use('/api/conversations', validateAccessToken, conversationsRouter);
+
+// WILDCARD ENDPOINT
+app.use('*', (req, res) => {
+  res.status(404).send('Resource not found');
+})
 
 // WEBSOCKET SERVER
 wss.on('connection', (ws) => {
@@ -54,8 +57,8 @@ wss.on('connection', (ws) => {
     });
   });
 
-  // INDICATE CLIENT DISCONNECTION
   ws.on('close', () => {
+    // INDICATE CLIENT DISCONNECTION
     console.log('Client disconnected...');
   });
 });
