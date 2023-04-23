@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // MODULE IMPORTS
 const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 const ws_1 = __importDefault(require("ws"));
 // ROUTE IMPORTS
 const translationRouter_1 = require("./routes/translationRouter");
@@ -40,7 +41,7 @@ const corsOptions = {
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
-// app.use(cors(corsOptions));
+app.use((0, cors_1.default)(corsOptions));
 // APPLICATION ENDPOINTS
 app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
 app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
