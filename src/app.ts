@@ -1,5 +1,5 @@
 // MODULE IMPORTS
-import express, { Request, Response } from 'express';
+import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import WebSocket from 'ws';
@@ -17,21 +17,28 @@ const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
 
+// APPLICATION DEPENDENCIES
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // CORS OPTIONS
-const corsOptions: object = {
-  origin: ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'],
+const corsOptions: cors.CorsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) {
+      callback(null, true);
+    } else if (['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'].indexOf(origin) === -1) {
+      callback(new Error('Not allowed by CORS'));
+    } else {
+      callback(null, true);
+    }
+  },
   optionsSuccessStatus: 200,
   credentials: true,
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
-
-// APPLICATION DEPENDENCIES
-app
-  .use(express.json())
-  .use(express.urlencoded({ extended: false }))
-  .use(bodyParser.urlencoded({ extended: true }))
-  .use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // APPLICATION ENDPOINTS
 app.use('/api/translate', validateAccessToken, translationRouter);
