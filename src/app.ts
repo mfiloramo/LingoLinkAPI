@@ -17,29 +17,12 @@ const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
 
-// CORS OPTIONS
-const corsOptions: any = {
-  origin: [process.env.CLIENT_URI],
-  optionsSuccessStatus: 200,
-  credentials: true,
-};
-
-// APPLICATION DEPENDENCIES
-app
-  .use(express.json())
-  .use(express.urlencoded({ extended: false }))
-  .use(bodyParser.urlencoded({ extended: true }))
-  .use(cors(corsOptions));
-
 // ROUTES
 app.use('/api/translate', validateAccessToken, translationRouter);
 app.use('/api/users', validateAccessToken, usersRouter);
 app.use('/api/participants', validateAccessToken, participantsRouter);
 app.use('/api/messages', validateAccessToken, messagesRouter);
 app.use('/api/conversations', validateAccessToken, conversationsRouter);
-
-// HANDLE PREFLIGHT REQUESTS
-app.options('*', cors(corsOptions));
 
 // WILDCARD ENDPOINT
 app.use('*', (req, res) => {
