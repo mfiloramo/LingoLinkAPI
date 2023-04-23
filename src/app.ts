@@ -18,7 +18,14 @@ const PORT = process.env.PORT || 3000;
 
 // CORS OPTIONS
 const corsOptions: object = {
-  origin: ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'],
+  origin: (origin: any, callback: any) => {
+    const allowedOrigins = ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'), false);
+    }
+  },
   optionsSuccessStatus: 200,
   credentials: true,
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
@@ -38,7 +45,7 @@ app.use('/api/participants', validateAccessToken, participantsRouter);
 app.use('/api/messages', validateAccessToken, messagesRouter);
 app.use('/api/conversations', validateAccessToken, conversationsRouter);
 
-// WILDCARD ENDPOINT
+// WILDCARD ROUTE
 app.use('*', (req, res) => {
   res.status(404).send('Resource not found');
 })
