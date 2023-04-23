@@ -49,7 +49,17 @@ app.use('*', (req, res) => {
 })
 
 // WEBSOCKET SERVER
-wss.on('connection', (ws) => {
+wss.on('connection', (ws: any) => {
+  // SET CORS HEADERS
+  const headers: any = {
+    "Access-Control-Allow-Origin": process.env.CLIENT_URI,
+    "Access-Control-Allow-Credentials": true,
+    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+  };
+  Object.keys(headers).forEach((key) => {
+    ws.set(key, headers[key]);
+  });
+
   // INDICATE CLIENT CONNECTION
   console.log('Client connected...');
 
