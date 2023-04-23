@@ -21,7 +21,7 @@ const wss = new ws_1.default.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
 // CORS OPTIONS
 const corsOptions = {
-    origin: [process.env.CLIENT_URI],
+    origin: process.env.CLIENT_URI,
     optionsSuccessStatus: 200,
     credentials: true,
 };

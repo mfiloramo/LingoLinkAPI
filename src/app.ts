@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 3000;
 
 // CORS OPTIONS
 const corsOptions: any = {
-  origin: [process.env.CLIENT_URI],
+  origin: process.env.CLIENT_URI,
   optionsSuccessStatus: 200,
   credentials: true,
 };
