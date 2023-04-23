@@ -4,25 +4,10 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import WebSocket from 'ws';
 
-// ROUTE IMPORTS
-import { translationRouter } from "./routes/translationRouter";
-import { usersRouter } from "./routes/usersRouter";
-import { participantsRouter } from "./routes/participantsRouter";
-import { messagesRouter } from "./routes/messagesRouter";
-import { conversationsRouter } from "./routes/conversationsRouter";
-import { validateAccessToken } from './middleware/validateAccessToken';
-
 // GLOBAL VARIABLES
 const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
-
-// ROUTES
-app.use('/api/translate', validateAccessToken, translationRouter);
-app.use('/api/users', validateAccessToken, usersRouter);
-app.use('/api/participants', validateAccessToken, participantsRouter);
-app.use('/api/messages', validateAccessToken, messagesRouter);
-app.use('/api/conversations', validateAccessToken, conversationsRouter);
 
 // WILDCARD ENDPOINT
 app.use('*', (req, res) => {
