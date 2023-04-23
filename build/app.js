@@ -19,6 +19,8 @@ const validateAccessToken_1 = require("./middleware/validateAccessToken");
 const app = (0, express_1.default)();
 const wss = new ws_1.default.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
+// DEBUG
+console.log('Client URI:', process.env.CLIENT_URI);
 // CORS OPTIONS
 const corsOptions = {
     origin: process.env.CLIENT_URI,
