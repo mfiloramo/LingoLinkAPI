@@ -41,7 +41,7 @@ const corsOptions = {
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
-app.use((0, cors_1.default)(corsOptions)); //testdfdsafd
+app.use((0, cors_1.default)(corsOptions));
 // APPLICATION ENDPOINTS
 app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
 app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
