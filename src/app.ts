@@ -29,24 +29,22 @@ app
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
   .use(bodyParser.urlencoded({ extended: true }))
-  .use(cors(corsOptions))
-  .use((req: any, res: any, next: any) => {
-    res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
-    next();
-  });
+  .use(cors(corsOptions));
 
-// APPLICATION ENDPOINTS
-app
-  .use('/api/translate', validateAccessToken, translationRouter)
-  .use('/api/users', validateAccessToken, usersRouter)
-  .use('/api/participants', validateAccessToken, participantsRouter)
-  .use('/api/messages', validateAccessToken, messagesRouter)
-  .use('/api/conversations', validateAccessToken, conversationsRouter);
+// ROUTES
+app.use('/api/translate', validateAccessToken, translationRouter);
+app.use('/api/users', validateAccessToken, usersRouter);
+app.use('/api/participants', validateAccessToken, participantsRouter);
+app.use('/api/messages', validateAccessToken, messagesRouter);
+app.use('/api/conversations', validateAccessToken, conversationsRouter);
+
+// HANDLE PREFLIGHT REQUESTS
+app.options('*', cors(corsOptions));
 
 // WILDCARD ENDPOINT
 app.use('*', (req, res) => {
   res.status(404).send('Resource not found');
-})
+});
 
 // WEBSOCKET SERVER
 wss.on('connection', (ws: any) => {

@@ -30,18 +30,15 @@ app
     .use(express_1.default.json())
     .use(express_1.default.urlencoded({ extended: false }))
     .use(body_parser_1.default.urlencoded({ extended: true }))
-    .use((0, cors_1.default)(corsOptions))
-    .use((req, res, next) => {
-    res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
-// APPLICATION ENDPOINTS
-app
-    .use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter)
-    .use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter)
-    .use('/api/participants', validateAccessToken_1.validateAccessToken, participantsRouter_1.participantsRouter)
-    .use('/api/messages', validateAccessToken_1.validateAccessToken, messagesRouter_1.messagesRouter)
-    .use('/api/conversations', validateAccessToken_1.validateAccessToken, conversationsRouter_1.conversationsRouter);
+    .use((0, cors_1.default)(corsOptions));
+// ROUTES
+app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
+app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
+app.use('/api/participants', validateAccessToken_1.validateAccessToken, participantsRouter_1.participantsRouter);
+app.use('/api/messages', validateAccessToken_1.validateAccessToken, messagesRouter_1.messagesRouter);
+app.use('/api/conversations', validateAccessToken_1.validateAccessToken, conversationsRouter_1.conversationsRouter);
+// HANDLE PREFLIGHT REQUESTS
+app.options('*', (0, cors_1.default)(corsOptions));
 // WILDCARD ENDPOINT
 app.use('*', (req, res) => {
     res.status(404).send('Resource not found');
