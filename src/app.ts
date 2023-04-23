@@ -38,7 +38,7 @@ const corsOptions: cors.CorsOptions = {
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
-app.use(cors(corsOptions)); //testdfdsaf
+app.use(cors(corsOptions)); //testdfdsafd
 
 // APPLICATION ENDPOINTS
 app.use('/api/translate', validateAccessToken, translationRouter);
