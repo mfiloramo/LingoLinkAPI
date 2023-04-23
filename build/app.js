@@ -19,35 +19,29 @@ const validateAccessToken_1 = require("./middleware/validateAccessToken");
 const app = (0, express_1.default)();
 const wss = new ws_1.default.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
-// APPLICATION DEPENDENCIES
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: false }));
-app.use(body_parser_1.default.urlencoded({ extended: true }));
 // CORS OPTIONS
 const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin) {
-            callback(null, true);
-        }
-        else if (['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'].indexOf(origin) === -1) {
-            callback(new Error('Not allowed by CORS'));
-        }
-        else {
-            callback(null, true);
-        }
-    },
+    origin: [process.env.CLIENT_URI],
     optionsSuccessStatus: 200,
     credentials: true,
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
-app.use((0, cors_1.default)(corsOptions));
+// APPLICATION DEPENDENCIES
+app
+    .use(express_1.default.json())
+    .use(express_1.default.urlencoded({ extended: false }))
+    .use(body_parser_1.default.urlencoded({ extended: true }))
+    .use((0, cors_1.default)(corsOptions))
+    .use((req, res, next) => {
+    res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 // APPLICATION ENDPOINTS
-app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
-app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
-app.use('/api/participants', validateAccessToken_1.validateAccessToken, participantsRouter_1.participantsRouter);
-app.use('/api/messages', validateAccessToken_1.validateAccessToken, messagesRouter_1.messagesRouter);
-app.use('/api/conversations', validateAccessToken_1.validateAccessToken, conversationsRouter_1.conversationsRouter);
+app
+    .use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter)
+    .use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter)
+    .use('/api/participants', validateAccessToken_1.validateAccessToken, participantsRouter_1.participantsRouter)
+    .use('/api/messages', validateAccessToken_1.validateAccessToken, messagesRouter_1.messagesRouter)
+    .use('/api/conversations', validateAccessToken_1.validateAccessToken, conversationsRouter_1.conversationsRouter);
 // WILDCARD ENDPOINT
 app.use('*', (req, res) => {
     res.status(404).send('Resource not found');

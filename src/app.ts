@@ -17,35 +17,31 @@ const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
 
-// APPLICATION DEPENDENCIES
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded({ extended: true }));
-
 // CORS OPTIONS
-const corsOptions: cors.CorsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) {
-      callback(null, true);
-    } else if (['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'].indexOf(origin) === -1) {
-      callback(new Error('Not allowed by CORS'));
-    } else {
-      callback(null, true);
-    }
-  },
+const corsOptions: any = {
+  origin: [process.env.CLIENT_URI],
   optionsSuccessStatus: 200,
   credentials: true,
-  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
-app.use(cors(corsOptions));
+
+// APPLICATION DEPENDENCIES
+app
+  .use(express.json())
+  .use(express.urlencoded({ extended: false }))
+  .use(bodyParser.urlencoded({ extended: true }))
+  .use(cors(corsOptions))
+  .use((req: any, res: any, next: any) => {
+    res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });
 
 // APPLICATION ENDPOINTS
-app.use('/api/translate', validateAccessToken, translationRouter);
-app.use('/api/users', validateAccessToken, usersRouter);
-app.use('/api/participants', validateAccessToken, participantsRouter);
-app.use('/api/messages', validateAccessToken, messagesRouter);
-app.use('/api/conversations', validateAccessToken, conversationsRouter);
+app
+  .use('/api/translate', validateAccessToken, translationRouter)
+  .use('/api/users', validateAccessToken, usersRouter)
+  .use('/api/participants', validateAccessToken, participantsRouter)
+  .use('/api/messages', validateAccessToken, messagesRouter)
+  .use('/api/conversations', validateAccessToken, conversationsRouter);
 
 // WILDCARD ENDPOINT
 app.use('*', (req, res) => {
