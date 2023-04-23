@@ -15,7 +15,7 @@ import { validateAccessToken } from './middleware/validateAccessToken';
 // GLOBAL VARIABLES
 const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT;
 
 // CORS OPTIONS
 const corsOptions: object = {
