@@ -14,6 +14,7 @@ const usersRouter_1 = require("./routes/usersRouter");
 const participantsRouter_1 = require("./routes/participantsRouter");
 const messagesRouter_1 = require("./routes/messagesRouter");
 const conversationsRouter_1 = require("./routes/conversationsRouter");
+const validateAccessToken_1 = require("./middleware/validateAccessToken");
 // GLOBAL VARIABLES
 const app = (0, express_1.default)();
 const wss = new ws_1.default.Server({ port: 8080 });
@@ -34,11 +35,11 @@ app
     .use((0, cors_1.default)(corsOptions));
 // TODO: ADD validateAccessToken MIDDLEWARE FOR EACH ROUTE
 // ROUTES
-app.use('/api/translate', translationRouter_1.translationRouter);
-app.use('/api/users', usersRouter_1.usersRouter);
-app.use('/api/participants', participantsRouter_1.participantsRouter);
-app.use('/api/messages', messagesRouter_1.messagesRouter);
-app.use('/api/conversations', conversationsRouter_1.conversationsRouter);
+app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
+app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
+app.use('/api/participants', validateAccessToken_1.validateAccessToken, participantsRouter_1.participantsRouter);
+app.use('/api/messages', validateAccessToken_1.validateAccessToken, messagesRouter_1.messagesRouter);
+app.use('/api/conversations', validateAccessToken_1.validateAccessToken, conversationsRouter_1.conversationsRouter);
 // HANDLE PREFLIGHT REQUESTS
 app.options('*', (0, cors_1.default)(corsOptions));
 // WILDCARD ENDPOINT
