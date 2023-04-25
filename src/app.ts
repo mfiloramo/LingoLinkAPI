@@ -17,15 +17,13 @@ const app = express();
 const wss = new WebSocket.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
 
-// DEBUG
-console.log('Client URI:', process.env.CLIENT_URI);
-
-
 // CORS OPTIONS
-const corsOptions: any = {
-  origin: process.env.CLIENT_URI,
+const corsOptions: object = {
+  origin: ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'],
   optionsSuccessStatus: 200,
   credentials: true,
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
 
 // APPLICATION DEPENDENCIES
@@ -35,12 +33,13 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .use(cors(corsOptions));
 
+// TODO: ADD validateAccessToken MIDDLEWARE FOR EACH ROUTE
 // ROUTES
-app.use('/api/translate', validateAccessToken, translationRouter);
-app.use('/api/users', validateAccessToken, usersRouter);
-app.use('/api/participants', validateAccessToken, participantsRouter);
-app.use('/api/messages', validateAccessToken, messagesRouter);
-app.use('/api/conversations', validateAccessToken, conversationsRouter);
+app.use('/api/translate', translationRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/participants', participantsRouter);
+app.use('/api/messages', messagesRouter);
+app.use('/api/conversations', conversationsRouter);
 
 // HANDLE PREFLIGHT REQUESTS
 app.options('*', cors(corsOptions));
@@ -53,14 +52,14 @@ app.use('*', (req, res) => {
 // WEBSOCKET SERVER
 wss.on('connection', (ws: any) => {
   // SET CORS HEADERS
-  const headers: any = {
-    "Access-Control-Allow-Origin": process.env.CLIENT_URI,
-    "Access-Control-Allow-Credentials": true,
-    "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
-  };
-  Object.keys(headers).forEach((key) => {
-    ws.set(key, headers[key]);
-  });
+  // const headers: any = {
+  //   "Access-Control-Allow-Origin": process.env.CLIENT_URI,
+  //   "Access-Control-Allow-Credentials": true,
+  //   "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept"
+  // };
+  // Object.keys(headers).forEach((key) => {
+  //   ws.set(key, headers[key]);
+  // });
 
   // INDICATE CLIENT CONNECTION
   console.log('Client connected...');
