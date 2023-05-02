@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TranslationController = void 0;
 const axios_1 = __importDefault(require("axios"));
+require("dotenv");
 class TranslationController {
     static translateText(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,8 +32,8 @@ class TranslationController {
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
                     'Accept-Encoding': 'application/gzip',
-                    'X-RapidAPI-Key': 'ecf66d69d6mshe72310107b57165p10bd22jsn5245b15bf146',
-                    'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+                    'X-RapidAPI-Key': process.env['RAPIDAPI_KEY'],
+                    'X-RapidAPI-Host': process.env['RAPIDAPI_HOST']
                 },
                 data: encodedParams
             };
