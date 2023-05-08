@@ -25,7 +25,7 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
-      - name: Upload artifact for deployment job
+      - name: Upload Artifact For Deployment Job
         uses: actions/upload-artifact@v2
         with:
           name: build
@@ -40,13 +40,13 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
+      - name: Download Artifact From Build Job
         uses: actions/download-artifact@v2
         with:
           name: build
           path: ./
 
-      - name: Deploy to Azure Web App
+      - name: Deploy To Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
