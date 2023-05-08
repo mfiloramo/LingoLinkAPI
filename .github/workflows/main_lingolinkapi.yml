@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
 
 jobs:
-  build_application:
+  build:
     runs-on: ubuntu-latest
+    if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev')
 
-    name: Build Application
     steps:
       - uses: actions/checkout@v2
 
@@ -31,13 +34,13 @@ jobs:
           name: build
           path: ./build
 
-  deploy_application:
+  deploy:
     runs-on: ubuntu-latest
-    name: Deploy Application
-    needs: build_application
+    needs: BuildApplication
+    if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev')
     environment:
       name: Production
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+      url: ${{ steps.DeployToAzureWebApp.outputs.webapp-url }}
 
     steps:
       - name: Download Artifact From Build Job
@@ -47,7 +50,7 @@ jobs:
           path: ./
 
       - name: Deploy To Azure Web App
-        id: deploy-to-webapp
+        id: DeployToAzureWebApp
         uses: azure/webapps-deploy@v2
         with:
           app-name: LingoLinkAPI
