@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/72812809/235482535-571dd542-8214-4dcc-ad81-d5001eac5d22.png" alt="readmeLogo" width="40%" height="40%" />
+  <img src="https://user-images.githubusercontent.com/72812809/236295242-99005189-2eeb-4d21-9653-6fed5f4520c6.png" alt="readmeLogo" width="23%" height="23%" />
 </p>
 
 LingoLink is a messaging application that allows users to communicate with others regardless of the language they speak. With the app's integration of Google Translate API, users can send and receive messages in their own language while the app automatically translates the messages in real-time for the other party. 
