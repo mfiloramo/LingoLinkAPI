@@ -1,9 +1,6 @@
 name: Build/Deploy Azure Web App (Node/Express API)
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     types: [closed]
     branches:
@@ -11,8 +8,8 @@ on:
 
 jobs:
   build_application:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main')
     name: Build Application
     steps:
       - name: Checkout Code
@@ -36,9 +33,9 @@ jobs:
           path: ./build
 
   deploy_application:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs: build_application
-    if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main')
     environment:
       name: Production
       url: ${{ steps.DeployToAzureWebApp.outputs.webapp-url }}
