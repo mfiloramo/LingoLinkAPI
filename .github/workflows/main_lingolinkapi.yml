@@ -1,4 +1,7 @@
-name: Build/Deploy Azure Web App (Node/Express API)
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy Node.js app to Azure Web App - LingoLinkAPI
 
 on:
   push:
@@ -7,19 +10,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_application:
+  build:
     runs-on: ubuntu-latest
 
-    name: Build Application
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Node.js 16.x
+      - name: Set up Node.js version
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
 
-      - name: npm install, build, test
+      - name: npm install, build, and test
         run: |
           npm install
           npm run build --if-present
@@ -28,29 +30,27 @@ jobs:
       - name: Upload Artifact For Deployment Job
         uses: actions/upload-artifact@v2
         with:
-          name: build
-          path: ./build
+          name: node-app
+          path: .
 
-  deploy_application:
+  deploy:
     runs-on: ubuntu-latest
-    name: Deploy Application
-    needs: build_application
+    needs: build
     environment:
-      name: Production
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download Artifact From Build Job
         uses: actions/download-artifact@v2
         with:
-          name: build
-          path: ./
+          name: node-app
 
       - name: Deploy To Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: LingoLinkAPI
-          slot-name: Production
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C79D9D0D4BD7440286621DE2B4FFAFFC }}
+          app-name: 'LingoLinkAPI'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_859AE43256B64A9BA62F168D45B3C892 }}
           package: .
