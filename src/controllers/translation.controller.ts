@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
+import 'dotenv';
 
 
 export class TranslationController {
@@ -20,8 +21,8 @@ export class TranslationController {
             headers: {
                 'content-type': 'application/x-www-form-urlencoded',
                 'Accept-Encoding': 'application/gzip',
-                'X-RapidAPI-Key': 'ecf66d69d6mshe72310107b57165p10bd22jsn5245b15bf146',
-                'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+                'X-RapidAPI-Key': process.env['RAPIDAPI_KEY'],
+                'X-RapidAPI-Host': process.env['RAPIDAPI_HOST']
             },
             data: encodedParams
         };

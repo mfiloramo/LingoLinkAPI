@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import jwksClient from 'jwks-rsa';
-import { msalNodeConfig } from "../config/msalAuth/msalNodeConfig";
+import { msalNodeConfig, API_ID_URI } from "../config/msalAuth/msalNodeConfig";
 
 const jwksUri = `https://login.microsoftonline.com/${msalNodeConfig.auth.authority}/discovery/keys`;
 
@@ -29,7 +29,7 @@ export async function validateAccessToken(req: any, res: Response, next: NextFun
       return res.status(401).send('Authorization header has an incorrect format');
     }
 
-    jwt.verify(token, getKey, { audience: msalNodeConfig.auth.clientId },(err: any, decodedToken: any) => {
+    jwt.verify(token, getKey, { audience: API_ID_URI },(err: any, decodedToken: any) => {
       if (err) {
         console.log('Token validation failed:', err);
         return res.status(401).send('Invalid access token');

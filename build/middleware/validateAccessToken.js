@@ -38,7 +38,7 @@ function validateAccessToken(req, res, next) {
             if (bearer !== 'Bearer' || !token) {
                 return res.status(401).send('Authorization header has an incorrect format');
             }
-            jsonwebtoken_1.default.verify(token, getKey, { audience: msalNodeConfig_1.msalNodeConfig.auth.clientId }, (err, decodedToken) => {
+            jsonwebtoken_1.default.verify(token, getKey, { audience: msalNodeConfig_1.API_ID_URI }, (err, decodedToken) => {
                 if (err) {
                     console.log('Token validation failed:', err);
                     return res.status(401).send('Invalid access token');
