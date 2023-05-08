@@ -23,16 +23,28 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.msalNodeConfig = void 0;
+exports.API_ID_URI = exports.msalNodeConfig = void 0;
 const msal_node_1 = require("@azure/msal-node");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const AZ_CLIENT_API = process.env['AZ_CLIENT_API'];
 const AZ_TENANT = process.env['AZ_TENANT'];
 const AZ_SECRET_VAL = process.env['AZ_SECRET_VAL'];
-if (!AZ_CLIENT_API || !AZ_TENANT || !AZ_SECRET_VAL) {
-    throw new Error('AZ_CLIENT, AZ_TENANT, and AZ_CLIENT_SECRET must be defined in the environment variables.');
+const LOCAL_API_ID_URI = process.env['LOCAL_API_ID_URI'];
+const PROD_API_ID_URI = process.env['PROD_API_ID_URI'];
+// if (!AZ_TENANT || !AZ_SECRET_VAL || !LOCAL_API_ID_URI || !PROD_API_ID_URI) {
+//   throw new Error('AZ_TENANT, AZ_CLIENT_SECRET, LOCAL_API_ID_URI, and PROD_API_ID_URI must be defined in the environment variables.');
+// }
+function getApiIdUri() {
+    if (process.env.NODE_ENV === 'production') {
+        return PROD_API_ID_URI;
+    }
+    else {
+        return LOCAL_API_ID_URI;
+    }
 }
+const API_ID_URI = getApiIdUri();
+exports.API_ID_URI = API_ID_URI;
 exports.msalNodeConfig = {
     auth: {
         clientId: AZ_CLIENT_API,
