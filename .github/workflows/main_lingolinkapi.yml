@@ -1,14 +1,13 @@
 name: Build/Deploy Azure Web App (Node/Express API)
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
 
 jobs:
   build_application:
-    if: github.event.pull_request.merged == true
+    if: github.event.head_commit.message != '' && contains(github.event.head_commit.message, 'Merge pull request') && contains(github.event.head_commit.message, 'from') && contains(github.event.head_commit.message, 'dev')
     runs-on: ubuntu-latest
     name: Build Application
     steps:
@@ -33,7 +32,7 @@ jobs:
           path: ./build
 
   deploy_application:
-    if: github.event.pull_request.merged == true
+    if: github.event.head_commit.message != '' && contains(github.event.head_commit.message, 'Merge pull request') && contains(github.event.head_commit.message, 'from') && contains(github.event.head_commit.message, 'dev')
     runs-on: ubuntu-latest
     needs: build_application
     environment:
