@@ -35,6 +35,7 @@ jobs:
     if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev')
     runs-on: ubuntu-latest
     needs: build_application
+    name: Deploy Application
     environment:
       name: Production
       url: ${{ steps.DeployToAzureWebApp.outputs.webapp-url }}
