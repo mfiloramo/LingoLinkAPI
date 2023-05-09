@@ -7,7 +7,7 @@ on:
 
 jobs:
   Build_application:
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev'
+    if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev')
     runs-on: ubuntu-latest
     name: Build Application
     steps:
