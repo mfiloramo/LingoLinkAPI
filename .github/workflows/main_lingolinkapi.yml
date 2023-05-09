@@ -46,6 +46,11 @@ jobs:
           name: build
           path: ./
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
         uses: azure/webapps-deploy@v2
