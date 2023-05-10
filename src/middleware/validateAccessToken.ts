@@ -29,7 +29,7 @@ export async function validateAccessToken(req: any, res: Response, next: NextFun
       return res.status(401).send('Authorization header has an incorrect format');
     }
 
-    jwt.verify(token, getKey, { audience: API_ID_URI },(err: any, decodedToken: any) => {
+    jwt.verify(token, getKey, { audience: 'api://lingolink-api' },(err: any, decodedToken: any) => {
       if (err) {
         console.log('Token validation failed:', err);
         return res.status(401).send('Invalid access token');
