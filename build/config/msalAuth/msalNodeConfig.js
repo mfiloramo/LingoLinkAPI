@@ -28,7 +28,7 @@ const msal_node_1 = require("@azure/msal-node");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const AZ_TENANT = process.env['AZ_TENANT'];
-const AZ_CLIENT_API_KEY = process.env['CLIENT_API_PROD'];
+const AZ_CLIENT_API = process.env['AZ_CLIENT_API'];
 const AZ_SECRET_API = process.env['AZ_SECRET_API'];
 const LOCAL_API_ID_URI = process.env['CLIENT_API_DEV'];
 const PROD_API_ID_URI = process.env['CLIENT_API_PROD'];
@@ -47,9 +47,9 @@ const API_ID_URI = getApiIdUri();
 exports.API_ID_URI = API_ID_URI;
 exports.msalNodeConfig = {
     auth: {
-        clientId: AZ_CLIENT_API_KEY,
-        authority: AZ_TENANT,
+        clientId: AZ_CLIENT_API,
         clientSecret: AZ_SECRET_API,
+        authority: `https://login.microsoftonline.com/${AZ_TENANT}`,
     },
     system: {
         loggerOptions: {
