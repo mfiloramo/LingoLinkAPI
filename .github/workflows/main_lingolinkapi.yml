@@ -28,8 +28,8 @@ jobs:
       - name: Upload Artifact For Deployment Job
         uses: actions/upload-artifact@v2
         with:
-          name: app
-          path: .
+          name: build
+          path: ./build
 
   deploy_application:
     if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev')
