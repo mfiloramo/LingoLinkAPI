@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Build_application:
+  build_application:
     if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev')
     runs-on: ubuntu-latest
     name: Build Application
@@ -19,17 +19,17 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: npm install, build, test
+      - name: npm ci, build, test
         run: |
-          npm install
+          npm ci
           npm run build --if-present
           npm run test --if-present
 
       - name: Upload Artifact For Deployment Job
         uses: actions/upload-artifact@v2
         with:
-          name: build
-          path: ./build
+          name: app
+          path: .
 
   deploy_application:
     if: (github.event_name == 'push') || (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref != 'dev')
@@ -44,8 +44,8 @@ jobs:
       - name: Download Artifact From Build Job
         uses: actions/download-artifact@v2
         with:
-          name: build
-          path: ./
+          name: app
+          path: .
 
       - name: Azure Login
         uses: azure/login@v1
