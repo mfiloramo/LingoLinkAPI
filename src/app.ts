@@ -31,7 +31,7 @@ app
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
   .use(bodyParser.urlencoded({ extended: true }))
-  .use(cors());
+  .use(cors(corsOptions));
 
 // SERVER ROUTES
 app.use('/api/translate', validateAccessToken, translationRouter);
