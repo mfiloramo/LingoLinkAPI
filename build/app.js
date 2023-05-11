@@ -25,14 +25,14 @@ const corsOptions = {
     optionsSuccessStatus: 200,
     credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept', 'Access-Control-Allow-Origin'] // ADDED LATTERMOST HEADER
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
 };
 // APPLICATION DEPENDENCIES
 app
     .use(express_1.default.json())
     .use(express_1.default.urlencoded({ extended: false }))
     .use(body_parser_1.default.urlencoded({ extended: true }))
-    .use((0, cors_1.default)(corsOptions));
+    .use((0, cors_1.default)());
 // SERVER ROUTES
 app.use('/api/translate', validateAccessToken_1.validateAccessToken, translationRouter_1.translationRouter);
 app.use('/api/users', validateAccessToken_1.validateAccessToken, usersRouter_1.usersRouter);
