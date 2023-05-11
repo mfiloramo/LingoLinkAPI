@@ -20,6 +20,8 @@ function getKey(header: any, callback: (arg0: null, arg1: any) => void) {
 export async function validateAccessToken(req: any, res: Response, next: NextFunction) {
   try {
     const authHeader = req.headers.authorization;
+    // DEBUG: APP/API CONNECTION ERROR
+    console.log('authHeader for validateAccessToken middleware: ', authHeader);
     if (!authHeader) {
       return res.status(401).send('Authorization header is missing');
     }
