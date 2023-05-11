@@ -25,7 +25,7 @@ const corsOptions = {
     optionsSuccessStatus: 200,
     credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept', 'Access-Control-Allow-Origin'] // ADDED LATTERMOST HEADER
 };
 // APPLICATION DEPENDENCIES
 app

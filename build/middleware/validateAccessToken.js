@@ -31,6 +31,8 @@ function validateAccessToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const authHeader = req.headers.authorization;
+            // DEBUG: APP/API CONNECTION ERROR
+            console.log('authHeader for validateAccessToken middleware: ', authHeader);
             if (!authHeader) {
                 return res.status(401).send('Authorization header is missing');
             }
