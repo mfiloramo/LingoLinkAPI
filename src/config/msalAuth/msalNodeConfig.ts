@@ -15,7 +15,6 @@ const PROD_API_ID_URI = process.env['CLIENT_API_PROD'];
 
 function getApiIdUri() {
   if (process.env.NODE_ENV === 'production') {
-    console.log('tomato');
     return PROD_API_ID_URI;
   } else {
     return LOCAL_API_ID_URI;
