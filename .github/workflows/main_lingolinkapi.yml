@@ -63,6 +63,6 @@ jobs:
         run: |
           az webapp deployment source config-zip \
             --src ./dist \
-            --resource-group worldchat-group \
+            --resource-group ASP-worldchatgroup-9e75 \
             --name LingoLinkAPI \
             --slot Production
