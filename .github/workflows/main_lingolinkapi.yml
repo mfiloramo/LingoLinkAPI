@@ -24,10 +24,10 @@ jobs:
       - name: Build Application
         run: npm run build
 
-      - name: Prepare For Deployment
+      - name: Install Production Dependencies in dist
         run: |
-          cp package.json ./dist
-          cp package-lock.json ./dist
+          cd dist
+          npm ci --only=production
 
       - name: Run Tests
         run: |
@@ -58,10 +58,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-#      - name: Set Azure Web App Setting to Skip Build
-#        run: |
-#          az webapp config appsettings set --name LingoLinkAPI --resource-group worldchat-group --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false
 
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp

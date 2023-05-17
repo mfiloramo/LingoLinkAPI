@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es6",                      /* Set the target ECMAScript version */
-    "module": "commonjs",                 /* Specify module code generation */
-    "strict": true,                       /* Enable strict type checking */
+    "target": "es6",
+    "module": "commonjs",
     "outDir": "dist",
-    "esModuleInterop": true,              /* Allow default imports from modules with no default export */
-    "forceConsistentCasingInFileNames": true /* Ensure consistent casing in file names */
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true
   },
-  "include": ["src/**/*"],                /* Specify files to include in compilation */
-  "exclude": ["node_modules"]     /* Specify files to exclude from compilation */
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }

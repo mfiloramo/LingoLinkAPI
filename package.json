@@ -2,11 +2,10 @@
   "name": "worldchatapi",
   "version": "1.0.0",
   "description": "API for WorldChat application",
-  "main": "dist/app.js",
   "scripts": {
     "start": "node ./dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "webpack",
+    "build": "tsc",
     "watch": "tsc --watch",
     "install-prod": "npm ci --only=production"
   },
