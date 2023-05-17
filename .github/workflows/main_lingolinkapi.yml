@@ -18,13 +18,13 @@ jobs:
         with:
           node-version: '16.x'
 
+      - name: Build Application
+        run: npm run build
+
       - name: Prepare For Deployment
         run: |
-          npm ci
-          npm run build
           cp package.json ./dist
           cp package-lock.json ./dist
-          cp webpack.config.js ./dist
 
       - name: Run Tests
         run: |
@@ -50,10 +50,6 @@ jobs:
         with:
           name: build
           path: ./dist
-
-#      - name: Install Production Dependencies
-#        run: npm ci --only=production
-#        working-directory: ./dist
 
       - name: Azure Login
         uses: azure/login@v1
