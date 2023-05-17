@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "webpack --config webpack.config.js",
+    "build": "webpack",
     "watch": "tsc --watch",
     "install-prod": "npm ci --only=production"
   },
