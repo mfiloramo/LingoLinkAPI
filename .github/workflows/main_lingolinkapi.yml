@@ -67,3 +67,5 @@ jobs:
           slot-name: Production
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C79D9D0D4BD7440286621DE2B4FFAFFC }}
           package: ./dist
+          skip-install: true
+          skip-build: true
