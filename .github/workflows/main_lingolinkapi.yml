@@ -62,10 +62,15 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Log Current Directory
+      - name: Log Current Directory Files
         run: |
-          echo "Files and Folders in the Current Directory:"
+          echo "Files And Folders In The Current Directory:"
           ls
+
+      - name: Log Current Directory Name
+        run: |
+          echo "Name Of Current Directory:"
+          pwd
 
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
