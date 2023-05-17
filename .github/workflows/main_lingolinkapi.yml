@@ -24,10 +24,10 @@ jobs:
       - name: Build Application
         run: npm run build
 
-      - name: Install Production Dependencies in dist
+      - name: Prepare For Deployment
         run: |
-          npm ci --only=production
-          cp -r node_modules ./dist
+          cp package.json ./dist
+          cp package-lock.json ./dist
 
       - name: Run Tests
         run: |
@@ -52,7 +52,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build
-          path: ./dist
+          path: .
 
       - name: Azure Login
         uses: azure/login@v1
@@ -66,4 +66,4 @@ jobs:
           app-name: LingoLinkAPI
           slot-name: Production
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C79D9D0D4BD7440286621DE2B4FFAFFC }}
-          package: ./dist
+          package: .
