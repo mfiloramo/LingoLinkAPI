@@ -6,3 +6,6 @@ node_modules
 
 # WEBPACK BUILD
 dist
+
+# TSC BUILD
+build
