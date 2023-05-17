@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install Node.js 16.x
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: '16.x'
 
@@ -24,16 +24,14 @@ jobs:
       - name: Build Application
         run: npm run build
 
+      - name: Run Tests
+        run: |
+          npm run test --if-present
+
       - name: Prepare For Deployment
         run: |
           cp package.json ./dist
           cp package-lock.json ./dist
-          cp .deployment ./dist
-          cp deploy.sh ./dist
-
-      - name: Run Tests
-        run: |
-          npm run test --if-present
 
       - name: Upload Artifact For Deployment Job
         uses: actions/upload-artifact@v2
