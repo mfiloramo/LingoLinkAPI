@@ -83,6 +83,4 @@ jobs:
 
       - name: Log wwwroot Directory
         run: |
-          az extension add --name webapp
-          az login --service-principal --username ${{ secrets.AZURE_CLIENT_ID }} --password ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-          az webapp log tail --name LingoLinkAPI --resource-group worldchat-group
+          echo ${{ secrets.AZURE_CLIENT_SECRET }} | az webapp log tail --name LingoLinkAPI --resource-group YourResourceGroupName --password-stdin
