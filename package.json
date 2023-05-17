@@ -5,7 +5,6 @@
   "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
-    "start-prod": "node",
     "dev": "nodemon src/app.ts",
     "build": "webpack",
     "watch": "tsc --watch",
