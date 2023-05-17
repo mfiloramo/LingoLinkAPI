@@ -83,4 +83,4 @@ jobs:
 
       - name: Log wwwroot Directory
         run: |
-          echo ${{ secrets.AZURE_CLIENT_SECRET }} | az webapp log tail --name LingoLinkAPI --resource-group YourResourceGroupName --password-stdin
+          echo ${{ secrets.AZURE_CLIENT_SECRET }} | az webapp log tail --name LingoLinkAPI --resource-group worldchat-group --password-stdin
