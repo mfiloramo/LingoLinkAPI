@@ -61,8 +61,8 @@ jobs:
 
       - name: Log Current Directory
         run: |
-          echo "Current Directory:"
-          pwd
+          echo "Files and Folders in the Current Directory:"
+          ls
 
       - name: Install Dependencies
         run: npm install --prefix ./dist
