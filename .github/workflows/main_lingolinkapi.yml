@@ -64,6 +64,5 @@ jobs:
       - name: Install Dependencies in Azure
         uses: azure/appservice-settings@v1
         with:
+          app-name: 'LingoLinkAPI'
           app-settings-json: '[{"name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "true", "slotSetting": false}, {"name": "npm start", "value": "node dist/app.js", "slotSetting": false}]'
-          app-service-plan: 'ASP-worldchatgroup-9e75'
-          web-app: 'LingoLinkAPI'
