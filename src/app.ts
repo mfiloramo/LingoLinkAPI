@@ -3,13 +3,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
 import WebSocket from 'ws';
+import path from 'path';
 
 // ROUTE IMPORTS
-import { translationRouter } from "./routes/translationRouter";
-import { usersRouter } from "./routes/usersRouter";
-import { participantsRouter } from "./routes/participantsRouter";
-import { messagesRouter } from "./routes/messagesRouter";
-import { conversationsRouter } from "./routes/conversationsRouter";
+import { translationRouter } from './routes/translationRouter';
+import { usersRouter } from './routes/usersRouter';
+import { participantsRouter } from './routes/participantsRouter';
+import { messagesRouter } from './routes/messagesRouter';
+import { conversationsRouter } from './routes/conversationsRouter';
 import { validateAccessToken } from './middleware/validateAccessToken';
 
 // GLOBAL VARIABLES
@@ -23,7 +24,7 @@ const corsOptions: CorsOptions = {
   optionsSuccessStatus: 200,
   credentials: true,
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 };
 
 // APPLICATION DEPENDENCIES
@@ -33,11 +34,15 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .use(cors(corsOptions));
 
+// SET THE MODULE RESOLUTION PATHS
+const appDirectory = path.resolve(__dirname);
+module.paths.push(path.join(appDirectory, 'node_modules'));
+
 // SERVER ROUTES
 app.use('/api/translate', validateAccessToken, translationRouter);
 app.use('/api/users', validateAccessToken, usersRouter);
 app.use('/api/participants', validateAccessToken, participantsRouter);
-app.use('/api/messages',validateAccessToken,  messagesRouter);
+app.use('/api/messages', validateAccessToken, messagesRouter);
 app.use('/api/conversations', validateAccessToken, conversationsRouter);
 
 // HANDLE PREFLIGHT REQUESTS
@@ -49,12 +54,12 @@ app.use('*', (req, res) => {
 });
 
 // WEBSOCKET SERVER
-wss.on('connection', (ws: any) => {
+wss.on('connection', (ws: WebSocket) => {
   // INDICATE CLIENT CONNECTION
   console.log('Client connected...');
 
   // BROADCAST WEBSOCKET DATA TO CLIENTS
-  ws.on('message', (message: any) => {
+  ws.on('message', (message: WebSocket.Data) => {
     wss.clients.forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
