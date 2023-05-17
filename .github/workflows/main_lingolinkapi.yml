@@ -59,6 +59,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Install Dependencies
+        run: npm ci --prefix ./dist
+
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
         uses: azure/webapps-deploy@v2
@@ -66,4 +69,4 @@ jobs:
           app-name: LingoLinkAPI
           slot-name: Production
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C79D9D0D4BD7440286621DE2B4FFAFFC }}
-          package: .
+          package: ./dist
