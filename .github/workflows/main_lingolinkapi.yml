@@ -50,9 +50,9 @@ jobs:
           name: build
           path: ./dist
 
-      - name: Install Production Dependencies
-        run: npm ci --only=production
-        working-directory: ./dist
+#      - name: Install Production Dependencies
+#        run: npm ci --only=production
+#        working-directory: ./dist
 
       - name: Azure Login
         uses: azure/login@v1
