@@ -59,8 +59,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Log Current Directory
+        run: |
+          echo "Current Directory:"
+          pwd
+
       - name: Install Dependencies
-        run: npm ci --prefix ./dist
+        run: npm install --prefix ./dist
 
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
