@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "API for WorldChat application",
   "scripts": {
-    "start": "node ./dist/app.js",
-    "dev": "nodemon src/app.ts",
+    "start": "node app.js",
+    "dev": "nodemon dist/app.js",
     "build": "tsc",
     "watch": "tsc --watch",
     "install-prod": "npm ci --only=production"
