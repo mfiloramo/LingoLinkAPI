@@ -59,6 +59,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: List Current Directory
+        run: ls -al
+
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
         uses: azure/webapps-deploy@v2
