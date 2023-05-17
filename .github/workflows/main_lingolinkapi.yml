@@ -59,13 +59,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: Install Dependencies
+        run: npm install
+
       - name: Log Current Directory
         run: |
           echo "Files and Folders in the Current Directory:"
           ls
-
-      - name: Install Dependencies
-        run: npm install
 
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
