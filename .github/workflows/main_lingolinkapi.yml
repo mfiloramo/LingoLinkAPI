@@ -26,8 +26,8 @@ jobs:
 
       - name: Install Production Dependencies in dist
         run: |
-          cd dist
           npm ci --only=production
+          cp -r node_modules ./dist
 
       - name: Run Tests
         run: |
