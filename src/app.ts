@@ -31,12 +31,7 @@ app
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
   .use(bodyParser.urlencoded({ extended: true }))
-  .use(cors(corsOptions))
-  .use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    next();
-});
+  .use(cors(corsOptions));
 
 // SERVER ROUTES
 app.use('/api/translate', validateAccessToken, translationRouter);
