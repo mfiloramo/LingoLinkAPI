@@ -61,11 +61,11 @@ jobs:
 
       - name: Log Current Directory
         run: |
-          echo "Files and Folders in the Current Directory:"
-          ls
+          echo "Files and Folders in the dist Directory:"
+          ls dist
 
       - name: Install Dependencies
-        run: npm install --prefix ./dist
+        run: npm install
 
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
