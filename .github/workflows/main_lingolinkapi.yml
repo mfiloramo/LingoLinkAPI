@@ -28,6 +28,8 @@ jobs:
         run: |
           cp package.json ./dist
           cp package-lock.json ./dist
+          cp .deployment ./dist
+          cp deploy.sh ./dist
 
       - name: Run Tests
         run: |
