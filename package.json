@@ -7,7 +7,8 @@
     "start": "node dist/app.js",
     "dev": "nodemon dist/app.js",
     "build": "webpack",
-    "watch": "tsc --watch"
+    "watch": "tsc --watch",
+    "install-prod": "npm ci --only=production"
   },
   "repository": {
     "type": "git",
