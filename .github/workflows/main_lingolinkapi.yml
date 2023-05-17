@@ -46,12 +46,13 @@ jobs:
     environment:
       name: Production
       url: ${{ steps.DeployToAzureWebApp.outputs.webapp-url }}
+
     steps:
       - name: Download Artifact From Build Job
         uses: actions/download-artifact@v2
         with:
           name: build
-          path: ./build
+          path: ./dist
 
       - name: Azure Login
         uses: azure/login@v1
@@ -60,7 +61,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd build/build
+          cd dist
           npm install
 
       - name: Deploy To Azure Web App
@@ -70,4 +71,4 @@ jobs:
           app-name: LingoLinkAPI
           slot-name: Production
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C79D9D0D4BD7440286621DE2B4FFAFFC }}
-          package: ./build/build
+          package: ./dist
