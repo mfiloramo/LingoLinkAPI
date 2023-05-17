@@ -59,9 +59,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set Azure Web App Setting to Skip Build
-        run: |
-          az webapp config appsettings set --name LingoLinkAPI --resource-group worldchat-group --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false
+#      - name: Set Azure Web App Setting to Skip Build
+#        run: |
+#          az webapp config appsettings set --name LingoLinkAPI --resource-group worldchat-group --settings SCM_DO_BUILD_DURING_DEPLOYMENT=false
 
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
