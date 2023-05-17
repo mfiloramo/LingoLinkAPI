@@ -24,7 +24,6 @@ jobs:
           npm run build
           cp package.json ./dist
           cp package-lock.json ./dist
-          cp webpack.config.js ./dist
 
       - name: Run Tests
         run: |
