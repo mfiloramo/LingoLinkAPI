@@ -18,10 +18,12 @@ jobs:
         with:
           node-version: '16.x'
 
-      - name: Install Dependencies & Compile
+      - name: Prepare For Deployment
         run: |
           npm ci
           npm run build
+          cp package.json ./dist
+          cp package-lock.json ./dist
 
       - name: Run Tests
         run: |
@@ -32,6 +34,7 @@ jobs:
         with:
           name: build
           path: ./dist
+          if-no-files-found: error
 
   deploy_application:
     runs-on: ubuntu-latest
@@ -48,7 +51,7 @@ jobs:
           path: ./dist
 
       - name: Install Production Dependencies
-        run: npm run install-prod
+        run: npm ci --only=production
         working-directory: ./dist
 
       - name: Azure Login
