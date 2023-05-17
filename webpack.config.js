@@ -2,12 +2,14 @@ const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+  mode: 'production',
   entry: './src/app.ts',
   output: {
     filename: 'app.js',
     path: path.resolve(__dirname, 'dist'),
+    libraryTarget: 'commonjs2',
   },
-  externals: [],
+  externals: [nodeExternals()],
   target: 'web',
   module: {
     rules: [
@@ -21,5 +23,4 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  mode: 'production',
 };
