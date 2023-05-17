@@ -25,8 +25,7 @@ jobs:
         run: npm run build
 
       - name: Run Tests
-        run: |
-          npm run test --if-present
+        run: npm run test --if-present
 
       - name: Prepare For Deployment
         run: |
@@ -60,17 +59,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Install Dependencies
-        run: npm install
-
-      - name: Log Current Directory Files
         run: |
-          echo "Files And Folders In The Current Directory:"
-          ls
-
-      - name: Log Current Directory Name
-        run: |
-          echo "Name Of Current Directory:"
-          pwd
+          cd build
+          npm install
 
       - name: Deploy To Azure Web App
         id: DeployToAzureWebApp
@@ -79,4 +70,4 @@ jobs:
           app-name: LingoLinkAPI
           slot-name: Production
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C79D9D0D4BD7440286621DE2B4FFAFFC }}
-          package: .
+          package: ./build

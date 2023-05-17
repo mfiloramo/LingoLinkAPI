@@ -3,7 +3,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
 import WebSocket from 'ws';
-import path from 'path';
 
 // ROUTE IMPORTS
 import { translationRouter } from './routes/translationRouter';
@@ -33,10 +32,6 @@ app
   .use(express.urlencoded({ extended: false }))
   .use(bodyParser.urlencoded({ extended: true }))
   .use(cors(corsOptions));
-
-// SET THE MODULE RESOLUTION PATHS
-const appDirectory = path.resolve(__dirname);
-module.paths.push(path.join(appDirectory, 'node_modules'));
 
 // SERVER ROUTES
 app.use('/api/translate', validateAccessToken, translationRouter);
