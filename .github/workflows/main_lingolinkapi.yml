@@ -59,8 +59,8 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install Dependencies
-        run: npm install
+#      - name: Install Dependencies
+#        run: npm install
 
       - name: Log Current Directory Files
         run: |
