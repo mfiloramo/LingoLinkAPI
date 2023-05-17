@@ -62,7 +62,7 @@ jobs:
       - name: Log Current Directory
         run: |
           echo "Files and Folders in the dist Directory:"
-          ls dist
+          ls
 
       - name: Install Dependencies
         run: npm install
