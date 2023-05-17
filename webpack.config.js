@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   mode: 'production',
-  entry: './src/app.ts', // DURING DEPLOYMENT SHOULD POINT TO SOMEPLACE DIFFERENT
+  entry: './src/app.ts',
   target: 'node',
   output: {
     filename: 'app.js',
