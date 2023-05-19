@@ -61,7 +61,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd build
+          cd ./dist
           npm ci
 
       - name: Deploy To Azure Web App
