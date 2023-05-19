@@ -1,4 +1,12 @@
 console.log('tomato', require.resolve('express'));
+console.log('tomato')
+console.log('tomato')
+console.log('tomato')
+console.log('tomato')
+console.log('tomato')
+console.log('tomato')
+console.log('tomato')
+console.log('tomato')
 
 // MODULE IMPORTS
 import express from 'express';
