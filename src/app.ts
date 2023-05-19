@@ -1,3 +1,5 @@
+console.log('tomato', require.resolve('express'));
+
 // MODULE IMPORTS
 import express from 'express';
 import bodyParser from 'body-parser';
