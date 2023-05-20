@@ -33,17 +33,17 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .use(cors(corsOptions));
 
-// // SERVER ROUTES
-app.use('/api/translate', validateAccessToken, translationRouter);
-app.use('/api/users', validateAccessToken, usersRouter);
-app.use('/api/participants', validateAccessToken, participantsRouter);
-app.use('/api/messages', validateAccessToken, messagesRouter);
-app.use('/api/conversations', validateAccessToken, conversationsRouter);
-//
-// // HANDLE PREFLIGHT REQUESTS
+// SERVER ROUTES
+app.use('/api/translate', translationRouter); // ENABLE validateAccesstoken MW
+app.use('/api/users', usersRouter); // ENABLE validateAccesstoken MW
+app.use('/api/participants', participantsRouter); // ENABLE validateAccesstoken MW
+app.use('/api/messages', messagesRouter); // ENABLE validateAccesstoken MW
+app.use('/api/conversations', conversationsRouter); // ENABLE validateAccesstoken MW
+
+// HANDLE PREFLIGHT REQUESTS
 app.options('*', cors(corsOptions));
-//
-// // WILDCARD ENDPOINT
+
+// WILDCARD ENDPOINT
 app.use('*', (req, res) => {
   res.status(404).send('Resource not found');
 });
