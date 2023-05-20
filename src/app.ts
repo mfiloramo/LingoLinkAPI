@@ -49,24 +49,24 @@ app.use('*', (req, res) => {
 });
 
 // WEBSOCKET SERVER
-// wss.on('connection', (ws: WebSocket) => {
-//   // INDICATE CLIENT CONNECTION
-//   console.log('Client connected...');
-//
-//   // BROADCAST WEBSOCKET DATA TO CLIENTS
-//   ws.on('message', (message: WebSocket.Data) => {
-//     wss.clients.forEach((client) => {
-//       if (client !== ws && client.readyState === WebSocket.OPEN) {
-//         client.send(message);
-//       }
-//     });
-//   });
-//
-//   ws.on('close', () => {
-//     // INDICATE CLIENT DISCONNECTION
-//     console.log('Client disconnected...');
-//   });
-// });
+wss.on('connection', (ws: WebSocket) => {
+  // INDICATE CLIENT CONNECTION
+  console.log('Client connected...');
+
+  // BROADCAST WEBSOCKET DATA TO CLIENTS
+  ws.on('message', (message: WebSocket.Data) => {
+    wss.clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  });
+
+  ws.on('close', () => {
+    // INDICATE CLIENT DISCONNECTION
+    console.log('Client disconnected...');
+  });
+});
 
 console.log('tomato');
 
