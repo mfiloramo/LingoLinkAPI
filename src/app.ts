@@ -33,12 +33,13 @@ app
   .use(bodyParser.urlencoded({ extended: true }))
   .use(cors(corsOptions));
 
-// SERVER ROUTES
-app.use('/api/translate', translationRouter); // ENABLE validateAccesstoken MW
-app.use('/api/users', usersRouter); // ENABLE validateAccesstoken MW
-app.use('/api/participants', participantsRouter); // ENABLE validateAccesstoken MW
-app.use('/api/messages', messagesRouter); // ENABLE validateAccesstoken MW
-app.use('/api/conversations', conversationsRouter); // ENABLE validateAccesstoken MW
+// SERVER ROUTES -- ENABLE validateAccessToken MIDDLEWARE FOR ALL ROUTES
+app
+  .use('/api/translate', translationRouter)
+  .use('/api/users', usersRouter)
+  .use('/api/participants', participantsRouter)
+  .use('/api/messages', messagesRouter)
+  .use('/api/conversations', conversationsRouter);
 
 // HANDLE PREFLIGHT REQUESTS
 app.options('*', cors(corsOptions));
