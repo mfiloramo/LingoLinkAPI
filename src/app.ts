@@ -14,7 +14,7 @@ import { validateAccessToken } from './middleware/validateAccessToken';
 
 // GLOBAL VARIABLES
 const app = express();
-const wss = new WebSocket.Server({ noServer: true });
+const wss = new WebSocket.Server({ port: 8080 });
 const PORT = process.env.PORT || 3000;
 
 // CORS OPTIONS
@@ -56,7 +56,7 @@ wss.on('connection', (ws: WebSocket) => {
 
   // BROADCAST WEBSOCKET DATA TO CLIENTS
   ws.on('message', (message: WebSocket.Data) => {
-    wss.clients.forEach((client) => {
+    wss.clients.forEach((client: WebSocket.WebSocket): void => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
       }
