@@ -23,10 +23,10 @@ const corsOptions: CorsOptions = {
   optionsSuccessStatus: 200,
   credentials: true,
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+  allowedHeaders: ['Content-Type',  'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 };
 
-// APPLICATION DEPENDENCIES
+// MIDDLEWARE CONFIGURATION
 app
   .use(express.json())
   .use(express.urlencoded({ extended: false }))

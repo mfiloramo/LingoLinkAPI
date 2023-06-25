@@ -4,7 +4,7 @@ import 'dotenv';
 
 
 export class TranslationController {
-    static async translateText(req: Request, res: Response): Promise<any> {
+    public static async translateText(req: Request, res: Response): Promise<any> {
         // DEFINE ENCODED HTTP REQUEST PARAMETERS
         const params = {
             q: req.body.content,
@@ -21,8 +21,8 @@ export class TranslationController {
             headers: {
                 'content-type': 'application/x-www-form-urlencoded',
                 'Accept-Encoding': 'application/gzip',
-                'X-RapidAPI-Key': process.env['RAPIDAPI_KEY'],
-                'X-RapidAPI-Host': process.env['RAPIDAPI_HOST']
+                'X-RapidAPI-Key': process.env.RAPIDAPI_KEY_GT,
+                'X-RapidAPI-Host': process.env.RAPIDAPI_HOST_GT
             },
             data: encodedParams
         };

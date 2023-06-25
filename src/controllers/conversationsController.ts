@@ -51,7 +51,7 @@ export const conversationsController = async (req: Request, res: Response) => {
       }
       break;
 
-    // UPDATE EXISTING CONVERSATION
+    // UPDATE EXISTING CONVERSATION BY ID
     case 'PUT':
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Update :conversationId, :name', {
