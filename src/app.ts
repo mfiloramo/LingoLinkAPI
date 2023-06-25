@@ -14,7 +14,8 @@ import { validateAccessToken } from './middleware/validateAccessToken';
 
 // GLOBAL VARIABLES
 const app = express();
-const wss = new WebSocket.Server({ port: 8085 });
+const server = require('http').createServer(app);
+const wss = new WebSocket.Server({ server });
 const PORT = process.env.PORT || 3000;
 
 // CORS OPTIONS
@@ -70,6 +71,6 @@ wss.on('connection', (ws: WebSocket) => {
 });
 
 // RUN EXPRESS SERVER
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Listening on port: ${PORT}...`);
 });
