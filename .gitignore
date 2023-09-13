@@ -4,8 +4,5 @@ node_modules
 # LOCAL ENVIRONMENT VARIABLES
 .env
 
-# WEBPACK BUILD
-dist
-
 # TSC BUILD
 build
