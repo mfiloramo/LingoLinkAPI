@@ -1,5 +1,5 @@
 // MODULE IMPORTS
-import express from 'express';
+import express, { Express } from 'express';
 import bodyParser from 'body-parser';
 import cors, { CorsOptions } from 'cors';
 import WebSocket from 'ws';
@@ -13,9 +13,9 @@ import { conversationsRouter } from './routes/conversationsRouter';
 import { validateAccessToken } from './middleware/validateAccessToken';
 
 // GLOBAL VARIABLES
-const app = express();
-const server = require('http').createServer(app);
-const wss = new WebSocket.Server({ server });
+const server: Express = express();
+const app: any = require('http').createServer(server);
+const wss: any = new WebSocket.Server({ server: app });
 const PORT = process.env.PORT || 3000;
 
 // CORS OPTIONS
@@ -28,14 +28,14 @@ const corsOptions: CorsOptions = {
 };
 
 // MIDDLEWARE CONFIGURATION
-app
+server
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
   .use(bodyParser.urlencoded({ extended: true }))
   .use(cors(corsOptions));
 
 // SERVER ROUTES -- ENABLE validateAccessToken MIDDLEWARE FOR ALL ROUTES
-app
+server
   .use('/api/translate', translationRouter)
   .use('/api/users', usersRouter)
   .use('/api/participants', participantsRouter)
@@ -43,20 +43,20 @@ app
   .use('/api/conversations', conversationsRouter);
 
 // HANDLE PREFLIGHT REQUESTS
-app.options('*', cors(corsOptions));
+server.options('*', cors(corsOptions));
 
 // WILDCARD ENDPOINT
-app.use('*', (req, res) => {
+server.use('*', (req, res) => {
   res.status(404).send('Resource not found');
 });
 
 // WEBSOCKET SERVER
-wss.on('connection', (ws: WebSocket) => {
+wss.on('connection', (ws: WebSocket): void => {
   // INDICATE CLIENT CONNECTION
   console.log('Client connected...');
 
   // BROADCAST WEBSOCKET DATA TO CLIENTS
-  ws.on('message', (message: WebSocket.Data) => {
+  ws.on('message', (message: WebSocket.Data): void => {
     wss.clients.forEach((client: WebSocket.WebSocket): void => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
@@ -72,5 +72,5 @@ wss.on('connection', (ws: WebSocket) => {
 
 // RUN EXPRESS SERVER
 server.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}...`);
+  console.log(`Listening on port: ${ PORT }...`);
 });
