@@ -1,8 +1,8 @@
 // MODULE IMPORTS
 import express, { Express } from 'express';
-import bodyParser from 'body-parser';
-import cors, { CorsOptions } from 'cors';
+import http from 'http';
 import WebSocket from 'ws';
+import cors, { CorsOptions } from 'cors';
 
 // ROUTE IMPORTS
 import { translationRouter } from './routes/translationRouter';
@@ -10,32 +10,33 @@ import { usersRouter } from './routes/usersRouter';
 import { participantsRouter } from './routes/participantsRouter';
 import { messagesRouter } from './routes/messagesRouter';
 import { conversationsRouter } from './routes/conversationsRouter';
-import { validateAccessToken } from './middleware/validateAccessToken';
 
 // GLOBAL VARIABLES
-const server: Express = express();
-const app: any = require('http').createServer(server);
-const wss: any = new WebSocket.Server({ server: app });
-const PORT = process.env.PORT || 3000;
+const app: Express = express();
+const PORT: string | 3000 = process.env.PORT || 3000;
 
-// CORS OPTIONS
+// WEBSOCKET HTTP SERVER
+const WS_PORT: number = 3030;
+const wsServer = http.createServer((req, res): void => {
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('Not found');
+});
+const wss = new WebSocket.Server({ server: wsServer });
+
+// CORS MIDDLEWARE
 const corsOptions: CorsOptions = {
   origin: ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'],
   optionsSuccessStatus: 200,
   credentials: true,
   methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type',  'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 };
+app.use(express.json());
+app.use(cors(corsOptions));
 
-// MIDDLEWARE CONFIGURATION
-server
-  .use(express.json())
-  .use(express.urlencoded({ extended: false }))
-  .use(bodyParser.urlencoded({ extended: true }))
-  .use(cors(corsOptions));
 
-// SERVER ROUTES -- ENABLE validateAccessToken MIDDLEWARE FOR ALL ROUTES
-server
+// SERVER ROUTES
+app
   .use('/api/translate', translationRouter)
   .use('/api/users', usersRouter)
   .use('/api/participants', participantsRouter)
@@ -43,10 +44,10 @@ server
   .use('/api/conversations', conversationsRouter);
 
 // HANDLE PREFLIGHT REQUESTS
-server.options('*', cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 // WILDCARD ENDPOINT
-server.use('*', (req, res) => {
+app.use('*', (req, res) => {
   res.status(404).send('Resource not found');
 });
 
@@ -71,6 +72,11 @@ wss.on('connection', (ws: WebSocket): void => {
 });
 
 // RUN EXPRESS SERVER
-server.listen(PORT, () => {
-  console.log(`Listening on port: ${ PORT }...`);
+app.listen(PORT, (): void => {
+  console.log(`API Server listening on port: ${ PORT }...`);
+});
+
+// RUN WEBSOCKET SERVER
+wsServer.listen(WS_PORT, (): void => {
+  console.log(`WebSocket Server listening on port: ${ WS_PORT }`);
 });
