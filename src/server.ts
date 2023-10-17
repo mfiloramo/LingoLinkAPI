@@ -16,12 +16,12 @@ const app: Express = express();
 const PORT: string | 3000 = process.env.PORT || 3000;
 
 // WEBSOCKET HTTP SERVER
-const WS_PORT: number = 3030;
-const wsServer = http.createServer((req, res): void => {
-  res.writeHead(404, { 'Content-Type': 'text/plain' });
-  res.end('Not found');
-});
-const wss = new WebSocket.Server({ server: wsServer });
+// const WS_PORT: number = 3030;
+// const wsServer = http.createServer((req, res): void => {
+//   res.writeHead(404, { 'Content-Type': 'text/plain' });
+//   res.end('Not found');
+// });
+// const wss = new WebSocket.Server({ server: wsServer });
 
 // CORS MIDDLEWARE
 const corsOptions: CorsOptions = {
@@ -52,24 +52,24 @@ app.use('*', (req, res) => {
 });
 
 // WEBSOCKET SERVER
-wss.on('connection', (ws: WebSocket): void => {
-  // INDICATE CLIENT CONNECTION
-  console.log('Client connected...');
-
-  // BROADCAST WEBSOCKET DATA TO CLIENTS
-  ws.on('message', (message: WebSocket.Data): void => {
-    wss.clients.forEach((client: WebSocket.WebSocket): void => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
-  });
-
-  ws.on('close', () => {
-    // INDICATE CLIENT DISCONNECTION
-    console.log('Client disconnected...');
-  });
-});
+// wss.on('connection', (ws: WebSocket): void => {
+//   // INDICATE CLIENT CONNECTION
+//   console.log('Client connected...');
+//
+//   // BROADCAST WEBSOCKET DATA TO CLIENTS
+//   ws.on('message', (message: WebSocket.Data): void => {
+//     wss.clients.forEach((client: WebSocket.WebSocket): void => {
+//       if (client !== ws && client.readyState === WebSocket.OPEN) {
+//         client.send(message);
+//       }
+//     });
+//   });
+//
+//   ws.on('close', () => {
+//     // INDICATE CLIENT DISCONNECTION
+//     console.log('Client disconnected...');
+//   });
+// });
 
 // RUN EXPRESS SERVER
 app.listen(PORT, (): void => {
@@ -77,6 +77,6 @@ app.listen(PORT, (): void => {
 });
 
 // RUN WEBSOCKET SERVER
-wsServer.listen(WS_PORT, (): void => {
-  console.log(`WebSocket Server listening on port: ${ WS_PORT }`);
-});
+// wsServer.listen(WS_PORT, (): void => {
+//   console.log(`WebSocket Server listening on port: ${ WS_PORT }`);
+// });
