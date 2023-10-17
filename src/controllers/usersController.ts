@@ -15,7 +15,6 @@ export const usersController = async (req: Request, res: Response): Promise<void
           res.status(500).send(error);
         }
       } else if (req.query) {
-        console.log('debug')
         // VALIDATE USER AGAINST DATABASE
         try {
           const response = await wcCoreMSQLConnection.query
