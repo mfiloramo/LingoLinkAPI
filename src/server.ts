@@ -47,7 +47,7 @@ app
 app.options('*', cors(corsOptions));
 
 // WILDCARD ENDPOINT
-app.use('*', (req, res) => {
+app.use('*', (req, res): void => {
   res.status(404).send('Resource not found');
 });
 
