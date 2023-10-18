@@ -16,8 +16,12 @@ const app: Express = express();
 const PORT: string | 3000 = process.env.PORT || 3000;
 
 // WEBSOCKET HTTP SERVER
-const server: any = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const WS_PORT: number = 3030;
+const wsServer = http.createServer((req, res): void => {
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('Not found');
+});
+const wss = new WebSocket.Server({ server: wsServer });
 
 // CORS MIDDLEWARE
 const corsOptions: CorsOptions = {
@@ -73,6 +77,6 @@ app.listen(PORT, (): void => {
 });
 
 // RUN WEBSOCKET SERVER
-// wsServer.listen(WS_PORT, (): void => {
-//   console.log(`WebSocket Server listening on port: ${ WS_PORT }`);
-// });
+wsServer.listen(WS_PORT, (): void => {
+  console.log(`WebSocket Server listening on port: ${ WS_PORT }`);
+});
