@@ -68,5 +68,5 @@ wss.on('connection', (ws: WebSocket): void => {
 
 // RUN SERVER FOR API AND WEBSOCKETS
 server.listen(PORT, (): void => {
-  console.log(`Server (both HTTP and WebSocket) listening on port: ${ PORT }...`);
+  console.log(`Server listening on port: ${ PORT }...`);
 });

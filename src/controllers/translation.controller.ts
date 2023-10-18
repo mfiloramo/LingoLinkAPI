@@ -30,10 +30,10 @@ export class TranslationController {
         // SEND HTTP REQUEST AND RETURN RESPONSE
         axios
           .request(options)
-          .then((response: any) => {
+          .then((response: any): void => {
               res.json(response.data.data.translations[0].translatedText);
           })
-          .catch((error: any) => {
+          .catch((error: any): void => {
               console.error(error);
           });
     }
