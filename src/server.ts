@@ -13,15 +13,8 @@ import { conversationsRouter } from './routes/conversationsRouter';
 
 // GLOBAL VARIABLES
 const app: Express = express();
-const PORT: string | 3000 = process.env.PORT || 3000;
-
-// WEBSOCKET HTTP SERVER
-const WS_PORT: number = 3030;
-const wsServer = http.createServer((req, res): void => {
-  res.writeHead(404, { 'Content-Type': 'text/plain' });
-  res.end('Not found');
-});
-const wss = new WebSocket.Server({ server: wsServer });
+const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
+const server: any = http.createServer(app);
 
 // CORS MIDDLEWARE
 const corsOptions: CorsOptions = {
@@ -34,22 +27,24 @@ const corsOptions: CorsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-
 // SERVER ROUTES
 app
-  .use('/api/translate', translationRouter)
-  .use('/api/users', usersRouter)
-  .use('/api/participants', participantsRouter)
-  .use('/api/messages', messagesRouter)
-  .use('/api/conversations', conversationsRouter);
+    .use('/api/translate', translationRouter)
+    .use('/api/users', usersRouter)
+    .use('/api/participants', participantsRouter)
+    .use('/api/messages', messagesRouter)
+    .use('/api/conversations', conversationsRouter);
 
 // HANDLE PREFLIGHT REQUESTS
 app.options('*', cors(corsOptions));
 
 // WILDCARD ENDPOINT
-app.use('*', (req, res): void => {
+app.use('*', (req: any, res: any): void => {
   res.status(404).send('Resource not found');
 });
+
+// INITIATE WEBSOCKET SERVER ON TOP OF THE HTTP SERVER
+const wss: any = new WebSocket.Server({ server });
 
 // WEBSOCKET SERVER
 wss.on('connection', (ws: WebSocket): void => {
@@ -71,12 +66,7 @@ wss.on('connection', (ws: WebSocket): void => {
   });
 });
 
-// RUN EXPRESS SERVER
-app.listen(PORT, (): void => {
-  console.log(`API Server listening on port: ${ PORT }...`);
-});
-
-// RUN WEBSOCKET SERVER
-wsServer.listen(WS_PORT, (): void => {
-  console.log(`WebSocket Server listening on port: ${ WS_PORT }`);
+// RUN SERVER FOR API AND WEBSOCKETS
+server.listen(PORT, (): void => {
+  console.log(`Server (both HTTP and WebSocket) listening on port: ${ PORT }...`);
 });
