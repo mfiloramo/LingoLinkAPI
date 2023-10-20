@@ -1,11 +1,7 @@
 name: Build/Deploy Azure Web App (Node/Express API)
 
 on:
-    push:
-      branches:
-        - main
-  pull_request:
-    types: [closed]
+  push:
     branches:
       - main
 
