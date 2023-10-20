@@ -9,12 +9,8 @@ export const conversationsController = async (req: Request, res: Response) => {
       if (!req.params.id) {
         // SELECT ALL CONVERSATIONS
         try {
-          const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll',
-            {
-              replacements: {
-                userId: req.params.id
-              }
-            }).catch((err: any) => console.log(err));
+          const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
+              .catch((err: any) => console.log(err));
           res.json(selectAll[0])
         } catch (error: any) {
           res.status(500).send(error);
