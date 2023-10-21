@@ -21,7 +21,7 @@ const corsOptions: CorsOptions = {
   origin: ['http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net'],
   optionsSuccessStatus: 200,
   credentials: true,
-  methods: ['GET', 'PUT', 'POST', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST','PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept'],
 };
 app.use(express.json());
@@ -29,11 +29,11 @@ app.use(cors(corsOptions));
 
 // SERVER ROUTES
 app
-    .use('/api/translate', translationRouter)
-    .use('/api/users', usersRouter)
-    .use('/api/participants', participantsRouter)
-    .use('/api/messages', messagesRouter)
-    .use('/api/conversations', conversationsRouter);
+  .use('/api/translate', translationRouter)
+  .use('/api/users', usersRouter)
+  .use('/api/participants', participantsRouter)
+  .use('/api/messages', messagesRouter)
+  .use('/api/conversations', conversationsRouter);
 
 // HANDLE PREFLIGHT REQUESTS
 app.options('*', cors(corsOptions));
