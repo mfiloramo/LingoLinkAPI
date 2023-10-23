@@ -7,7 +7,7 @@ export class TranslationController {
     public static async translateText(req: Request, res: Response): Promise<any> {
         // DEFINE ENCODED HTTP REQUEST PARAMETERS
         const params = {
-            q: req.body.content,
+            q: req.body.textInput,
             target: req.body.targLang,
             source: req.body.source_language
         };
