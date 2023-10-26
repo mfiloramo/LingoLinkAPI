@@ -2,11 +2,11 @@ import { Request, Response } from 'express';
 import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const conversationsController = async (req: Request, res: Response) => {
+export const conversationsController = async (req: Request, res: Response): Promise<void> => {
   switch (req.method) {
     // SELECT CONVERSATION
     case 'GET':
-      if (!req.params.id) {
+      if (!req.query.id) {
         // SELECT ALL CONVERSATIONS
         try {
           const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
@@ -20,7 +20,7 @@ export const conversationsController = async (req: Request, res: Response) => {
         try {
           const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select_UserId :userId', {
             replacements: {
-              userId: req.params.id
+              userId: req.query.id
             }
           })
           res.send(response[0]);
