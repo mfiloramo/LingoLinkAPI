@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 export const usersController = async (req: Request, res: Response): Promise<void> => {
   switch (req.method) {
     case 'GET':
-      if (!req.body.userId && !req.query) {
+      if (!req.body.user_id && !req.query) {
         // SELECT ALL USERS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll')
@@ -35,7 +35,7 @@ export const usersController = async (req: Request, res: Response): Promise<void
           try {
             const response = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
               replacements: {
-                userId: req.body.userId,
+                userId: req.body.user_id,
               }
             })
             res.send(response[0][0]);
@@ -51,12 +51,12 @@ export const usersController = async (req: Request, res: Response): Promise<void
       if (req.body.token) {
         try {
           const decodedToken = jwt.decode(req.body.token) as any;
-          const userId = decodedToken.oid;
+          const user_id = decodedToken.oid;
 
           // SELECT USER BY ID
           const response = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
             replacements: {
-              userId,
+              user_id,
             },
           });
 
@@ -91,7 +91,7 @@ export const usersController = async (req: Request, res: Response): Promise<void
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_User_Update :userId, :username, :email, :password', {
           replacements: {
-            userId: req.body.userId,
+            userId: req.body.user_id,
             username: req.body.username,
             email: req.body.email,
             password: req.body.password,
@@ -109,10 +109,10 @@ export const usersController = async (req: Request, res: Response): Promise<void
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_User_Delete :userId', {
           replacements: {
-            userId: req.body.userId,
+            userId: req.body.user_id,
           }
         })
-        res.json(`User ${req.body.userId} deleted successfully`);
+        res.json(`User ${req.body.user_id} deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);

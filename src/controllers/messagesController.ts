@@ -36,7 +36,7 @@ export const messagesController = async (req: Request, res: Response) => {
         await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp',  {
           replacements: {
             conversationId: req.body.conversationId,
-            userId: req.body.userID,
+            userId: req.body.user_id,
             content: req.body.textInput,
             srcLang: req.body.source_language,
             timestamp: new Date().toISOString()
