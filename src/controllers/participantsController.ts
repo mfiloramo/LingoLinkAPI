@@ -27,11 +27,11 @@ export const participantsController = async (req: Request, res: Response) => {
             console.log(error);
           }
           // HANDLE SELECTION BY userId
-        } else if (req.body.selector === 'userId') {
+        } else if (req.body.selector === 'user_id') {
           try {
             const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_UserId :userId', {
               replacements: {
-                userId: req.body.userId
+                userId: req.body.user_id
               }
             })
             res.send(response[0][0]);
@@ -51,7 +51,7 @@ export const participantsController = async (req: Request, res: Response) => {
             conversationId: req.body.conversationId,
           }
         })
-        res.send(`Participant with userId ${req.body.userId} created successfully`);
+        res.send(`Participant with user_id ${req.body.user_id} created successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -63,12 +63,12 @@ export const participantsController = async (req: Request, res: Response) => {
       res.send('Cannot update participant(s)')
       break;
 
-    // DELETE EXISTING PARTICIPANT BY userId AND conversationId
+    // DELETE EXISTING PARTICIPANT BY user_id AND conversationId
     case 'DELETE':
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Delete :userId, :conversationId', {
           replacements: {
-            userId: req.body.userId,
+            userId: req.body.user_id,
             conversationId: req.body.conversationId,
           }
         })
