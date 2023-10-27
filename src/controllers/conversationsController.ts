@@ -15,10 +15,10 @@ export const conversationsController = async (req: Request, res: Response): Prom
         } catch (error: any) {
           res.status(500).send(error);
         }
-      } else {
-        // SELECT CONVERSATION BY ID
+      } else if (req.query.id) {
+        // SELECT CONVERSATIONS BY USER ID
         try {
-          const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Select_UserId :userId', {
+          const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Metadata :userId', {
             replacements: {
               userId: req.query.id
             }
