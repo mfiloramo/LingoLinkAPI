@@ -6,16 +6,8 @@ export const conversationsController = async (req: Request, res: Response): Prom
   switch (req.method) {
     // SELECT CONVERSATION
     case 'GET':
-      if (!req.query.id) {
-        // SELECT ALL CONVERSATIONS
-        try {
-          const selectAll: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_SelectAll')
-              .catch((err: any) => console.log(err));
-          res.json(selectAll[0])
-        } catch (error: any) {
-          res.status(500).send(error);
-        }
-      } else if (req.query.id) {
+      if (req.query.id) {
+
         // SELECT CONVERSATIONS BY USER ID
         try {
           const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Metadata :userId', {
