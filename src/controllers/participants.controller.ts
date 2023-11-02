@@ -72,7 +72,7 @@ export const participantsController = async (req: Request, res: Response) => {
             conversationId: req.body.conversationId,
           }
         })
-        res.send(`Participant with userId ${ req.body.userId } and conversationId ${ req.body.conversationId } deleted successfully`);
+        res.json(`Participant with userId ${ req.body.userId } and conversationId ${ req.body.conversationId } deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
