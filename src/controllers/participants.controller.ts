@@ -51,7 +51,7 @@ export const participantsController = async (req: Request, res: Response) => {
             conversationId: req.body.conversationId,
           }
         })
-        res.send(`Participant with user_id ${req.body.user_id} created successfully`);
+        res.send(`Participant with user_id ${ req.body.user_id } created successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -68,11 +68,11 @@ export const participantsController = async (req: Request, res: Response) => {
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Delete :userId, :conversationId', {
           replacements: {
-            userId: req.body.user_id,
+            userId: req.body.userId,
             conversationId: req.body.conversationId,
           }
         })
-        res.send(`Participant with userId ${req.body.userId} and conversationId ${req.body.conversationId} deleted successfully`);
+        res.send(`Participant with userId ${ req.body.userId } and conversationId ${ req.body.conversationId } deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
