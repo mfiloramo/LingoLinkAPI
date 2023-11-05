@@ -26,9 +26,13 @@ export const conversationsController = async (req: Request, res: Response): Prom
     // CREATE NEW CONVERSATION
     case 'POST':
       try {
-        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Create :name',  {
+        const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Start :recipientEmail, :conversationName, :sourceLanguage, :senderUserId, :timestamp',  {
           replacements: {
-            name: req.body.name,
+            recipientEmail: req.body.recipientEmail,
+            conversationName: req.body.conversationName,
+            sourceLanguage: req.body.sourceLanguage,
+            senderUserId: req.body.senderUserId,
+            timestamp: null
           }
         })
         // RETURN NEW CONVERSATION ID
@@ -48,7 +52,7 @@ export const conversationsController = async (req: Request, res: Response): Prom
             name: req.body.name,
           }
         })
-        res.json(`Conversation ${req.body.name} updated successfully`);
+        res.json(`Conversation ${ req.body.name } updated successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
@@ -63,7 +67,7 @@ export const conversationsController = async (req: Request, res: Response): Prom
             conversationId: req.body.conversationId,
           }
         })
-        res.json(`Conversation ${req.body.conversationId} deleted successfully`);
+        res.json(`Conversation ${ req.body.conversationId } deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
