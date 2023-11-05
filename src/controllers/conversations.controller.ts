@@ -32,7 +32,7 @@ export const conversationsController = async (req: Request, res: Response): Prom
             conversationName: req.body.conversationName,
             sourceLanguage: req.body.sourceLanguage,
             senderUserId: req.body.senderUserId,
-            timestamp: null
+            timestamp: req.body.timestamp
           }
         })
         // RETURN NEW CONVERSATION ID
