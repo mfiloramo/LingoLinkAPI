@@ -5,11 +5,11 @@ import WebSocket from 'ws';
 import cors, { CorsOptions } from 'cors';
 
 // ROUTE IMPORTS
-import { translationRouter } from './routes/translationRouter';
-import { usersRouter } from './routes/usersRouter';
-import { participantsRouter } from './routes/participantsRouter';
-import { messagesRouter } from './routes/messagesRouter';
-import { conversationsRouter } from './routes/conversationsRouter';
+import { translationRouter } from './routers/translationRouter';
+import { usersRouter } from './routers/usersRouter';
+import { participantsRouter } from './routers/participantsRouter';
+import { messagesRouter } from './routers/messagesRouter';
+import { conversationsRouter } from './routers/conversationsRouter';
 
 // GLOBAL VARIABLES
 const app: Express = express();
