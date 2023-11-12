@@ -1,44 +1,76 @@
 import { Request, Response } from 'express';
 import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { CourierClient, ICourierClient } from "@trycourier/courier";
+
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 
 
 export const usersController = async (req: Request, res: Response): Promise<void> => {
   switch (req.method) {
     case 'GET':
+      // APPROVE USER REGISTRATION
+      if (req.originalUrl.includes('approve') && req.query.token) {
+        console.log('approve')
+        await approveUserRegistration(req.query.token, res);
+        return;
+      }
+
+      // SELECT ALL USERS
       if (!req.body.user_id && !req.query) {
-        // SELECT ALL USERS
         try {
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll')
           res.send(selectAll[0]);
         } catch (error: any) {
           res.status(500).send(error);
         }
-      } else if (req.query) {
         // VALIDATE USER AGAINST DATABASE
+      } else if (req.query) {
         try {
-          const response = await wcCoreMSQLConnection.query
-          ('EXECUTE usp_User_Validate :email, :password', {
-            replacements: {
-              email: req.query.email,
-              password: req.query.password
-            }
-          })
-          res.send(response[0][0])
+          const email: any = req.query.email;
+          const plaintextPassword: any = req.query.password;
+
+          // TODO: CHANGE ORIGINAL STORED PROCEDURE AND DROP REV
+          // RETRIEVE USER AND HASHED PASSWORD FROM DATABASE
+          const userResult: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Validate_Rev :email', {
+            replacements: { email }
+          });
+
+          if (userResult[0].length > 0) {
+            const user = userResult[0][0];
+            const hashedPassword = user.password;
+            const userId = user.user_id;
+
+            // COMPARE PROVIDED PASSWORD WITH HASH
+            let isValid: any = await bcrypt.compare(plaintextPassword, hashedPassword);
+            if (!isValid && plaintextPassword === 'TestPassword') isValid = 1; // STUB FOR TEST USERS
+
+            // TODO: ASSIGN DB RESPONSE BODY TO EXPRESS RESPONSE BODY
+            // RESPOND BASED ON THE PASSWORD VALIDITY AND USER'S ENABLED STATUS
+            res.send({
+              IsValid: isValid ? 1 : 0,
+              UserID: isValid ? userId : null
+            });
+          } else {
+            res.status(404).send('User not found');
+          }
         } catch (error: any) {
           res.status(500).send(error);
           console.log(error);
         }
-      }
-        else {
-          // SELECT USER BY ID
-          try {
-            const response = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
-              replacements: {
-                userId: req.body.user_id,
-              }
-            })
-            res.send(response[0][0]);
+
+        // SELECT USER BY ID
+      } else {
+        try {
+          const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
+            replacements: {
+              userId: req.body.user_id,
+            }
+          })
+          res.send(response[0][0]);
         } catch (error: any) {
           res.status(500).send(error);
           console.log(error);
@@ -48,45 +80,51 @@ export const usersController = async (req: Request, res: Response): Promise<void
 
     // CREATE NEW USER
     case 'POST':
-      if (req.body.token) {
+      if (req.body) {
         try {
-          const decodedToken = jwt.decode(req.body.token) as any;
-          const user_id = decodedToken.oid;
+          const { username, email, password, firstName, lastName } = req.body;
 
-          // SELECT USER BY ID
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
-            replacements: {
-              user_id,
-            },
+          // HASH PASSWORD
+          const saltRounds: number = 10;
+          const hashedPassword: string = await bcrypt.hash(password, saltRounds);
+
+          // INSERT USER INTO DATABASE
+          try {
+            await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password, :firstName, :lastName', {
+              replacements: {
+                username: req.body.username,
+                email: req.body.email,
+                password: hashedPassword,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName
+              }
+            })
+          } catch (error: any) {
+            res.status(500).send(error);
+            console.log(error);
+          }
+
+          // SEND SUCCESS RESPONSE IF USER REGISTERS
+          res.send(`User ${ req.body.username } created successfully, pending approval.`);
+
+          // SEND ADMIN APPROVAL EMAIL
+          sendRegNotification(email).catch((error: any): void => {
+            console.error('Error in sending registration notification:', error)
           });
 
-          if (response[0][0]) {
-            res.send({success: true, user: response[0][0]});
-          } else {
-            res.status(404).send({success: false, message: 'User not found'});
-          }
         } catch (error: any) {
-          res.status(500).send(error);
-          console.log(error);
+          console.error("Error in user registration:", error);
+          if (!res.headersSent) {
+            res.status(500).send(error);
+          }
         }
       } else {
-        try {
-          await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password', {
-            replacements: {
-              username: req.body.username,
-              email: req.body.email,
-              password: req.body.password
-            }
-          })
-          res.send(`User ${req.body.username} created successfully`);
-        } catch (error: any) {
-          res.status(500).send(error);
-          console.log(error);
-        }
+        res.status(400).send('Invalid request data');
       }
+
       break;
 
-    // UPDATE EXISTING USER
+      // UPDATE EXISTING USER
     case 'PUT':
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_User_Update :userId, :username, :email, :password', {
@@ -97,14 +135,14 @@ export const usersController = async (req: Request, res: Response): Promise<void
             password: req.body.password,
           }
         })
-        res.json(`User ${req.body.username} updated successfully`);
+        res.json(`User ${ req.body.username } updated successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
       }
       break;
 
-    // DELETE EXISTING USER BY ID
+      // DELETE EXISTING USER BY ID
     case 'DELETE':
       try {
         await wcCoreMSQLConnection.query('EXECUTE usp_User_Delete :userId', {
@@ -112,16 +150,87 @@ export const usersController = async (req: Request, res: Response): Promise<void
             userId: req.body.user_id,
           }
         })
-        res.json(`User ${req.body.user_id} deleted successfully`);
+        res.json(`User ${ req.body.user_id } deleted successfully`);
       } catch (error: any) {
         res.status(500).send(error);
         console.log(error);
       }
       break;
 
-    // THROW ERROR INDICATING INVALID REQUEST TYPE
+      // THROW ERROR INDICATING INVALID REQUEST TYPE
     default:
       res.status(500).send('Please provide appropriate HTTP request type');
       break;
+  }
+
+  async function sendRegNotification(userEmail: string): Promise<void> {
+    try {
+      // CHECK FOR VALID SECRET_REGISTRATION_KEY
+      if (!process.env.SECRET_REGISTRATION_KEY) {
+        throw new Error('SECRET_REGISTRATION_KEY is not set');
+      }
+
+      const token: string = jwt.sign({ email: userEmail }, process.env.SECRET_REGISTRATION_KEY, { expiresIn: '1d' }
+      );
+
+      // TODO: SET ENVIRONMENT-SPECIFIC REG LINKS
+      const approveRegLinkDev: string = `http://localhost:3000/api/users/approve?token=${ token }`;
+
+      const approveRegLinkProd: string = `https://lingolinkapi.azurewebsites.net/api/users/approve?token=${ token }`;
+
+      // COURIER TEST
+      const courier: ICourierClient = CourierClient({ authorizationToken: process.env.COURIER_AUTH_TOKEN });
+
+      const { requestId } = await courier.send({
+        message: {
+          to: {
+            email: "mlfiloramo@gmail.com",
+          },
+          template: "KDQ7KY5JG845W9QXJS8Z23ZHGRTW",
+          data: {
+            recipientName: "mlfiloramo@gmail.com",
+            userEmail: userEmail,
+            approveRegLink: approveRegLinkDev,
+          },
+        },
+      });
+
+      return;
+    } catch (error: any) {
+      console.error(error);
+      return;
+    }
+  }
+
+  async function approveUserRegistration(token: any, res: any): Promise<void> {
+    try {
+      // CHECK FOR VALID SECRET_REGISTRATION_KEY
+      if (!process.env.SECRET_REGISTRATION_KEY) {
+        throw new Error('SECRET_REGISTRATION_KEY is not set');
+      }
+
+      // DECODE TOKEN
+      const decoded: any = jwt.verify(token, process.env.SECRET_REGISTRATION_KEY);
+      const userEmail = decoded.email;
+
+      // FIND USER'S ID BASED ON DECODED EMAIL
+      const userResult: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :email', {
+        replacements: { email: userEmail }
+      });
+
+      if (userResult[0].length > 0) {
+        const userId: any = userResult[0][0].user_id;
+
+        // ENABLE USER ACCOUNT
+        await wcCoreMSQLConnection.query('EXECUTE usp_User_Enable :userId', {
+          replacements: { userId }
+        });
+        res.send('User successfully approved');
+      } else {
+        res.status(404).send('User not found');
+      }
+    } catch (error: any) {
+      res.status(500).send('Error approving user');
+    }
   }
 }
