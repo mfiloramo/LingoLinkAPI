@@ -9,19 +9,21 @@ dotenv.config();
 
 
 
-export const usersController = async (req: Request, res: Response): Promise<void> => {
+export const usersController = async (req: Request, res: any): Promise<void> => {
   switch (req.method) {
     case 'GET':
-      // APPROVE USER REGISTRATION
+      // APPROVE OR DECLINE USER REGISTRATION
       if (req.originalUrl.includes('approve') && req.query.token) {
-        console.log('approve')
         await approveUserRegistration(req.query.token, res);
+        return;
+      } else if (req.originalUrl.includes('decline') && req.query.token) {
+        await declineUserRegistration(req.query.token, res);
         return;
       }
 
       // SELECT ALL USERS
       if (!req.body.user_id && !req.query) {
-        try {
+        try {``
           const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_User_SelectAll')
           res.send(selectAll[0]);
         } catch (error: any) {
@@ -33,9 +35,8 @@ export const usersController = async (req: Request, res: Response): Promise<void
           const email: any = req.query.email;
           const plaintextPassword: any = req.query.password;
 
-          // TODO: CHANGE ORIGINAL STORED PROCEDURE AND DROP REV
           // RETRIEVE USER AND HASHED PASSWORD FROM DATABASE
-          const userResult: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Validate_Rev :email', {
+          const userResult: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Validate :email', {
             replacements: { email }
           });
 
@@ -78,7 +79,7 @@ export const usersController = async (req: Request, res: Response): Promise<void
       }
       break;
 
-    // CREATE NEW USER
+      // CREATE NEW USER
     case 'POST':
       if (req.body) {
         try {
@@ -175,25 +176,40 @@ export const usersController = async (req: Request, res: Response): Promise<void
 
       // TODO: SET ENVIRONMENT-SPECIFIC REG LINKS
       const approveRegLinkDev: string = `http://localhost:3000/api/users/approve?token=${ token }`;
+      const declineRegLinkDev: string = `http://localhost:3000/api/users/decline?token=${ token }`;
+      // const approveRegLinkProd: string = `https://lingolinkapi.azurewebsites.net/api/users/approve?token=${ token }`;
 
-      const approveRegLinkProd: string = `https://lingolinkapi.azurewebsites.net/api/users/approve?token=${ token }`;
-
-      // COURIER TEST
+      // SEND EMAIL NOTIFICATION TO ADMIN
       const courier: ICourierClient = CourierClient({ authorizationToken: process.env.COURIER_AUTH_TOKEN });
 
-      const { requestId } = await courier.send({
+      await courier.send({
         message: {
           to: {
-            email: "mlfiloramo@gmail.com",
+            email: process.env.ADMIN_EMAIL,
           },
-          template: "KDQ7KY5JG845W9QXJS8Z23ZHGRTW",
+          template: 'KDQ7KY5JG845W9QXJS8Z23ZHGRTW',
           data: {
-            recipientName: "mlfiloramo@gmail.com",
+            recipientName: process.env.ADMIN_EMAIL,
             userEmail: userEmail,
             approveRegLink: approveRegLinkDev,
+            declineRegLink: declineRegLinkDev
           },
         },
-      });
+      })
+          .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
+          .catch((error: any) => console.error(error));
+
+      // SEND EMAIL NOTIFICATION TO USER
+      await courier.send({
+        message: {
+          to: {
+            email: userEmail,
+          },
+          template: 'BMWQMCFFBH4NMEN6HEFWG7BK56WJ',
+        },
+      })
+          .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
+          .catch((error: any) => console.error(error));
 
       return;
     } catch (error: any) {
@@ -204,13 +220,11 @@ export const usersController = async (req: Request, res: Response): Promise<void
 
   async function approveUserRegistration(token: any, res: any): Promise<void> {
     try {
-      // CHECK FOR VALID SECRET_REGISTRATION_KEY
-      if (!process.env.SECRET_REGISTRATION_KEY) {
-        throw new Error('SECRET_REGISTRATION_KEY is not set');
-      }
+      // CHECK FOR SECRET_REGISTRATION_KEY
+      if (!process.env.SECRET_REGISTRATION_KEY) console.error('Error: SECRET_REGISTRATION_KEY not found.');
 
       // DECODE TOKEN
-      const decoded: any = jwt.verify(token, process.env.SECRET_REGISTRATION_KEY);
+      const decoded: any = jwt.verify(token, process.env.SECRET_REGISTRATION_KEY!);
       const userEmail = decoded.email;
 
       // FIND USER'S ID BASED ON DECODED EMAIL
@@ -226,11 +240,66 @@ export const usersController = async (req: Request, res: Response): Promise<void
           replacements: { userId }
         });
         res.send('User successfully approved');
+
+        // SEND EMAIL NOTIFICATION TO USER
+        const courier: ICourierClient = CourierClient({ authorizationToken: process.env.COURIER_AUTH_TOKEN });
+
+        await courier.send({
+          message: {
+            to: {
+              email: userEmail,
+            },
+            template: '5HVQKZMPVCMX9TQ30BEW1BPVMWAN',
+          },
+        })
+            .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
+            .catch((error: any) => console.error(error));
+        return;
       } else {
         res.status(404).send('User not found');
       }
     } catch (error: any) {
-      res.status(500).send('Error approving user');
+      res.status(500).send('Error approving user', error);
+    }
+  }
+
+  async function declineUserRegistration(token: any, res: any): Promise<void> {
+    try {
+      // CHECK FOR SECRET_REGISTRATION_KEY
+      if (!process.env.SECRET_REGISTRATION_KEY) console.error('Error: SECRET_REGISTRATION_KEY not found.');
+
+      // DECODE TOKEN
+      const decoded: any = jwt.verify(token, process.env.SECRET_REGISTRATION_KEY!);
+      const userEmail = decoded.email;
+
+      // FIND USER'S ID BASED ON DECODED EMAIL
+      const userResult: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :email', {
+        replacements: { email: userEmail }
+      });
+
+      if (userResult[0].length > 0) {
+        res.send('User successfully declined');
+
+        // SEND EMAIL NOTIFICATION TO USER
+        const courier: ICourierClient = CourierClient({ authorizationToken: process.env.COURIER_AUTH_TOKEN });
+
+        await courier.send({
+          message: {
+            to: {
+              email: userEmail,
+            },
+            template: '4790REG5SDM7Y4GKRXFRRCMBG9X9',
+          },
+        })
+            .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
+            .catch((error: any): void => {
+              console.error(error)
+            });
+      } else {
+        res.status(404).send('User not found');
+      }
+    } catch (error: any) {
+      res.status(500).send('Error declining user', error);
     }
   }
 }
