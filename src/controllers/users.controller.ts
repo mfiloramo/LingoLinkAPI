@@ -106,7 +106,7 @@ export const usersController = async (req: Request, res: any): Promise<void> => 
           }
 
           // SEND SUCCESS RESPONSE IF USER REGISTERS
-          res.send(`User ${ req.body.username } created successfully, pending approval.`);
+          res.json(`User ${ req.body.username } created successfully, pending approval.`);
 
           // SEND ADMIN APPROVAL EMAIL
           sendRegNotification(email).catch((error: any): void => {
@@ -196,8 +196,14 @@ export const usersController = async (req: Request, res: any): Promise<void> => 
           },
         },
       })
-          .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
-          .catch((error: any) => console.error(error));
+          .then((response: any): void => {
+            console.log('Email notification successfully sent with requestId of:', response.requestId)
+            return;
+          })
+          .catch((error: any): void => {
+            console.error(error)
+            return;
+          });
 
       // SEND EMAIL NOTIFICATION TO USER
       await courier.send({
@@ -208,9 +214,12 @@ export const usersController = async (req: Request, res: any): Promise<void> => 
           template: 'BMWQMCFFBH4NMEN6HEFWG7BK56WJ',
         },
       })
-          .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
-          .catch((error: any) => console.error(error));
-
+          .then((response: any): void => {
+            console.log('Email notification successfully sent with requestId of:', response.requestId)
+          })
+          .catch((error: any): void => {
+            console.error(error)
+          });
       return;
     } catch (error: any) {
       console.error(error);
@@ -218,7 +227,7 @@ export const usersController = async (req: Request, res: any): Promise<void> => 
     }
   }
 
-  async function approveUserRegistration(token: any, res: any): Promise<void> {
+  async function approveUserRegistration(token: any, res: Response): Promise<void> {
     try {
       // CHECK FOR SECRET_REGISTRATION_KEY
       if (!process.env.SECRET_REGISTRATION_KEY) console.error('Error: SECRET_REGISTRATION_KEY not found.');
@@ -252,14 +261,20 @@ export const usersController = async (req: Request, res: any): Promise<void> => 
             template: '5HVQKZMPVCMX9TQ30BEW1BPVMWAN',
           },
         })
-            .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
-            .catch((error: any) => console.error(error));
+            .then((response: any): void => {
+              console.log('Email notification successfully sent with requestId of:', response.requestId);
+              return;
+            })
+            .catch((error: any): void => {
+              console.error(error)
+              return;
+            });
         return;
       } else {
         res.status(404).send('User not found');
       }
     } catch (error: any) {
-      res.status(500).send('Error approving user', error);
+      res.status(500).send(`Error approving user: ${ JSON.stringify(error) }`);
     }
   }
 
@@ -291,7 +306,9 @@ export const usersController = async (req: Request, res: any): Promise<void> => 
             template: '4790REG5SDM7Y4GKRXFRRCMBG9X9',
           },
         })
-            .then((response: any) => console.log('Email notification successfully sent with requestId of:', response.requestId))
+            .then((response: any): void => {
+              console.log('Email notification successfully sent with requestId of:', response.requestId);
+            })
             .catch((error: any): void => {
               console.error(error)
             });
