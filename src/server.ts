@@ -63,7 +63,7 @@ wss.on('connection', (ws: WebSocket): void => {
     });
   });
 
-  ws.on('close', () => {
+  ws.on('close', (): void => {
     // INDICATE CLIENT DISCONNECTION
     console.log('Client disconnected...');
   });
