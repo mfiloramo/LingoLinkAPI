@@ -2,89 +2,75 @@ import { Request, Response } from 'express';
 import { wcCoreMSQLConnection } from "../config/database/wcCoreMSQLConnection";
 
 
-export const messagesController = async (req: Request, res: Response) => {
-  switch (req.method) {
-    // SELECT MESSAGE
-    case 'GET':
-      if (!req.params.id) {
-        // SELECT ALL MESSAGES
-        try {
-          const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll')
-          res.send(selectAll[0]);
-        } catch (error: any) {
-          res.status(500).send(error);
-        }
-      } else {
-        // SELECT MESSAGES BY CONVERSATION ID
-        try {
-          const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
-            replacements: {
-              conversationId: req.params.id
-            }
-          })
-          res.json(response[0]);
-        } catch (error: any) {
-          res.status(500).send(error);
-          console.log(error);
-        }
+export const selectAllMessages = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // SELECT ALL MESSAGES
+    const selectAll = await wcCoreMSQLConnection.query('EXECUTE usp_Message_SelectAll')
+    res.send(selectAll[0]);
+  } catch (error: any) {
+    res.status(500).send(error);
+  }
+}
+export const selectMessagesByConversationId = async (req: Request, res: Response): Promise<void> => {
+  // SELECT MESSAGES BY CONVERSATION ID
+  try {
+    const response = await wcCoreMSQLConnection.query('EXECUTE usp_Message_Select :conversationId', {
+      replacements: {
+        conversationId: req.params.id
       }
-      break;
+    })
+    res.json(response[0]);
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.log(error);
+  }
+}
 
-    // CREATE NEW MESSAGE
-    case 'POST':
-      try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp',  {
-          replacements: {
-            conversationId: req.body.conversationId,
-            userId: req.body.user_id,
-            content: req.body.textInput,
-            srcLang: req.body.source_language,
-            timestamp: new Date().toISOString()
-          }
-        })
-        res.json(`Message with conversationId ${req.body.conversationId} created successfully`);
-      } catch (error: any) {
-        res.status(500).send(error);
-        console.log(error);
+export const createNewMessage = async (req: Request, res: Response): Promise<void> => {
+  // CREATE NEW MESSAGE
+  try {
+    await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp', {
+      replacements: {
+        conversationId: req.body.conversationId,
+        userId: req.body.user_id,
+        content: req.body.textInput,
+        srcLang: req.body.source_language,
+        timestamp: new Date().toISOString()
       }
-      break;
-
-    // UPDATE EXISTING MESSAGE
-    case 'PUT':
-      try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :srcLang, :timestamp', {
-          replacements: {
-            messageId: req.body.messageId,
-            content: req.body.textInput,
-            srcLang: req.body.srcLang,
-            timestamp: new Date().toISOString(),
-          }
-        })
-        res.json(`Message ${req.body.messageId} updated successfully`);
-      } catch (error: any) {
-        res.status(500).send(error);
-        console.log(error);
+    })
+    res.json(`Message with conversationId ${ req.body.conversationId } created successfully`);
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.log(error);
+  }
+}
+export const updateExistingMessage = async (req: Request, res: Response): Promise<void> => {
+  // UPDATE EXISTING MESSAGE
+  try {
+    await wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :srcLang, :timestamp', {
+      replacements: {
+        messageId: req.body.messageId,
+        content: req.body.textInput,
+        srcLang: req.body.srcLang,
+        timestamp: new Date().toISOString(),
       }
-      break;
-
-    // DELETE EXISTING MESSAGE BY MESSAGE ID
-    case 'DELETE':
-      try {
-        await wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :messageId', {
-          replacements: {
-            messageId: req.body.messageId,
-          }
-        })
-        res.json(`Message ${req.body.messageId} deleted successfully`);
-      } catch (error: any) {
-        res.status(500).send(error);
-        console.log(error);
+    })
+    res.json(`Message ${req.body.messageId} updated successfully`);
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.log(error);
+  }}
+export const deleteExistingMessage = async (req: Request, res: Response): Promise<void> => {
+  // DELETE EXISTING MESSAGE BY MESSAGE ID
+  try {
+    await wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :messageId', {
+      replacements: {
+        messageId: req.body.messageId,
       }
-      break;
-
-    // THROW ERROR INDICATING INVALID REQUEST TYPE
-    default:
-      res.status(500).send('Please provide appropriate HTTP request type');
-      break;
+    })
+    res.json(`Message ${ req.body.messageId } deleted successfully`);
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.log(error);
   }
 }

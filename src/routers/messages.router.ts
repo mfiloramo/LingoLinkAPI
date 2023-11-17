@@ -1,13 +1,18 @@
-import express, { Router, Request, Response } from 'express';
-import { messagesController } from "../controllers/messages.controller";
+import express, { Router } from 'express';
+import {
+  createNewMessage, deleteExistingMessage,
+  selectAllMessages,
+  selectMessagesByConversationId, updateExistingMessage
+} from "../controllers/messages.controller";
 
 
 const router: Router = express.Router();
 
-router.get('/:id?', messagesController);
-router.post('/', messagesController);
-router.delete('/:id?', messagesController);
-router.put('/:id?', messagesController);
+router.get('/', selectAllMessages);
+router.get('/:id?', selectMessagesByConversationId);
+router.post('/', createNewMessage);
+router.put('/:id?', updateExistingMessage);
+router.delete('/:id?', deleteExistingMessage);
 
 
 export const messagesRouter: Router = router;
