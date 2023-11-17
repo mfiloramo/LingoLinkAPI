@@ -1,13 +1,18 @@
 import express, { Router } from 'express';
-import { conversationsController } from "../controllers/conversations.controller";
+import {
+  createConversation, deleteConversation,
+  selectAllConversations,
+  selectConversationsByUserId, updateConversation
+} from "../controllers/conversations.controller";
 
 
 const router: Router = express.Router();
 
-router.get('/:id?', conversationsController);
-router.post('/', conversationsController);
-router.delete('/:id?', conversationsController);
-router.put('/:id?', conversationsController);
+router.get('/:id?', selectConversationsByUserId);
+router.get('/', selectAllConversations);
+router.post('/', createConversation);
+router.put('/:id?', updateConversation);
+router.delete('/:id?', deleteConversation);
 
 
 export const conversationsRouter: Router = router;

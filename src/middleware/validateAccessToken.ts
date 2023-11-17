@@ -17,6 +17,7 @@ function getKey(header: any, callback: (arg0: null, arg1: any) => void) {
   });
 }
 
+// TODO: CHECK IF THIS FILE IS DEPRECATED
 export async function validateAccessToken(req: any, res: Response, next: NextFunction) {
   try {
     const authHeader = req.headers.authorization;
