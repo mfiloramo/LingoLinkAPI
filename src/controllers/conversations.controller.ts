@@ -31,14 +31,10 @@ export const selectConversationsByUserId = async (req: Request, res: Response): 
 export const createConversation = async (req: Request, res: Response): Promise<any> => {
   // CREATE NEW CONVERSATION
   try {
+    const { recipientEmail, conversationName, sourceLanguage, senderUserId, timestamp } = req.body;
+
     const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Start :recipientEmail, :conversationName, :sourceLanguage, :senderUserId, :timestamp',  {
-      replacements: {
-        recipientEmail: req.body.recipientEmail,
-        conversationName: req.body.conversationName,
-        sourceLanguage: req.body.sourceLanguage,
-        senderUserId: req.body.senderUserId,
-        timestamp: req.body.timestamp
-      }
+      replacements: { recipientEmail, conversationName, sourceLanguage, senderUserId,timestamp }
     })
     // RETURN NEW CONVERSATION ID
     res.json(conversationId[0][0]);
@@ -51,11 +47,10 @@ export const createConversation = async (req: Request, res: Response): Promise<a
 export const updateConversation = async (req: Request, res: Response): Promise<any> => {
   // UPDATE EXISTING CONVERSATION BY ID
   try {
+    const { conversationId, name } = req.body;
+
     await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Update :conversationId, :name', {
-      replacements: {
-        conversationId: req.body.conversationId,
-        name: req.body.name,
-      }
+      replacements: { conversationId, name }
     })
     res.json(`Conversation ${ req.body.name } updated successfully`);
   } catch (error: any) {
@@ -67,10 +62,10 @@ export const updateConversation = async (req: Request, res: Response): Promise<a
 export const deleteConversation = async (req: Request, res: Response): Promise<any> => {
   // DELETE EXISTING CONVERSATION BY ID
   try {
+    const { conversationId } = req.body;
+
     await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Delete :conversationId', {
-      replacements: {
-        conversationId: req.body.conversationId,
-      }
+      replacements: { conversationId }
     })
     res.json(`Conversation ${ req.body.conversationId } deleted successfully`);
   } catch (error: any) {
