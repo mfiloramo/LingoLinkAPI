@@ -41,7 +41,6 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
   }
 }
 
-// TODO: SEND RESPONSE IN THIS FUNCTION
 export const sendRegNotifications = async (req: Request, res: Response): Promise<void> => {
   try {
     const userEmail: any = req.query.userEmail;

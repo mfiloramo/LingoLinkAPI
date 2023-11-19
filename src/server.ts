@@ -40,7 +40,7 @@ app
 // HANDLE PREFLIGHT REQUESTS
 app.options('*', cors(corsOptions));
 
-// TODO: MAKE WILDCARD VIEW
+// TODO: BUILD WILDCARD VIEW
 // WILDCARD ENDPOINT
 app.use('*', (req: any, res: any): void => {
   res.status(404).send('Resource not found');
