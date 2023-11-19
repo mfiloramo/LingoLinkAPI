@@ -51,14 +51,13 @@ export const sendRegNotifications = async (req: Request, res: Response): Promise
       throw new Error('SECRET_REGISTRATION_KEY is not set');
     }
 
+    // ISSUE JSON WEB TOKEN
     const token: string = jwt.sign({ email: userEmail }, process.env.SECRET_REGISTRATION_KEY, { expiresIn: '1d' }
     );
 
-    // ENVIRONMENT-SPECIFIC LINKS FOR RESPONDING TO USER REQUEST
-    const approveRegLink: string = `${ process.env.BASE_URL }/auth/approve/${ token }`;
-    const declineRegLink: string = `${ process.env.BASE_URL }/auth/decline/${ token }`;
-
-    // const approveRegLinkProd: string = `https://lingolinkapi.azurewebsites.net/api/users/approve?token=${ token }`;
+    // SET ENVIRONMENT-SPECIFIC ENDPOINTS FOR RESPONDING TO USER REG. REQUEST
+    const approveRegLink: string = `${ process.env.API_BASE_URL }/auth/approve/${ token }`;
+    const declineRegLink: string = `${ process.env.API_BASE_URL }/auth/decline/${ token }`;
 
     // SEND EMAIL NOTIFICATION TO ADMIN
     const courier: ICourierClient = CourierClient({ authorizationToken: process.env.COURIER_AUTH_TOKEN });
@@ -101,6 +100,7 @@ export const sendRegNotifications = async (req: Request, res: Response): Promise
       .catch((error: any): void => {
         console.error(error)
       });
+    res.sendStatus(200);
     return;
   } catch (error: any) {
     console.error(error);
@@ -113,7 +113,7 @@ export const approveUserRegistration = async (req: any, res: Response): Promise<
     // CHECK FOR SECRET_REGISTRATION_KEY
     if (!process.env.SECRET_REGISTRATION_KEY) console.error('Error: SECRET_REGISTRATION_KEY not found.');
 
-    // DECODE TOKEN
+    // VERIFY JSON WEB TOKEN
     const decoded: any = jwt.verify(req.params.token, process.env.SECRET_REGISTRATION_KEY!);
     const userEmail = decoded.email;
 
