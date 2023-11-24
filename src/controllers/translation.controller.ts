@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
-import 'dotenv';
+import { decode } from 'he';
 
 
 export const translateText = async (req: Request, res: Response): Promise<any> => {
@@ -26,14 +26,16 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
     data: encodedParams
   };
 
-  // TODO: FIX URIENCODED SYMBOLS APPEARING IN TRANSLATED PAYLOADS
   // SEND HTTP REQUEST AND RETURN RESPONSE
   axios
     .request(options)
     .then((response: any): void => {
       const translatedText = response.data.data.translations[0].translatedText;
-      // const decodedText: string = decodeURIComponent(translatedText);
-      res.json(translatedText);
+
+      // DECODE HTML ENTITIES IN TEXT
+      const decodedText: string = decode(translatedText);
+
+      res.json(decodedText);
     })
     .catch((error: any): void => {
       console.error(error);
