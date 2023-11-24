@@ -16,7 +16,7 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
       replacements: { email }
     });
 
-    // CHECK IF USER IF AVAILABLE
+    // CHECK IF USER IS AVAILABLE
     if (userResult[0].length > 0) {
       const user: any = userResult[0][0];
       const hashedPassword = user.password;
@@ -32,8 +32,8 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
       // CHECK IF USER AND PASSWORD ARE VALID
       if (user && isPasswordValid) {
         res.json({
-          IsValid: user.enabled,
-          UserID: user.user_id
+          enabled: user.enabled,
+          userId: user.user_id
         });
       } else {
         res.status(401).send('Invalid credentials');
