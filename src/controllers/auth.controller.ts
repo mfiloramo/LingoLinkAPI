@@ -8,38 +8,43 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const validateUser = async (req: Request, res: Response): Promise<void> => {
-  // VALIDATE USER AGAINST DATABASE
   try {
-    const email: any = req.query.email;
-    const plaintextPassword: any = req.query.password;
+    const email: string = req.query.email as string;
+    const plaintextPassword: string = req.query.password as string;
 
-    // RETRIEVE USER AND HASHED PASSWORD FROM DATABASE
-    const userResult: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Validate :email', {
+    const userResult = await wcCoreMSQLConnection.query('EXECUTE usp_User_Validate :email', {
       replacements: { email }
     });
 
+    // CHECK IF USER IF AVAILABLE
     if (userResult[0].length > 0) {
-      const user = userResult[0][0];
+      const user: any = userResult[0][0];
       const hashedPassword = user.password;
-      const userId = user.user_id;
 
-      // COMPARE PROVIDED PASSWORD WITH HASH
-      let isValid: any = await bcrypt.compare(plaintextPassword, hashedPassword);
-      if (!isValid && plaintextPassword === 'TestPassword') isValid = 1; // STUB FOR TEST USERS
+      // COMPARE THE PLAINTEXT PASSWORD WITH THE HASHED PASSWORD
+      let isPasswordValid: boolean = await bcrypt.compare(plaintextPassword, hashedPassword);
 
-      // RESPOND BASED ON THE PASSWORD VALIDITY AND USER'S ENABLED STATUS
-      res.send({
-        IsValid: isValid ? 1 : 0,
-        UserID: isValid ? userId : null
-      });
+      // STUB: LET TEST_USER ACCOUNTS IN WITHOUT CHECKING FOR HASH
+      if (plaintextPassword === user.password && user.password === 'TestPassword') {
+        isPasswordValid = true;
+      }
+
+      // CHECK IF USER AND PASSWORD ARE VALID
+      if (user && isPasswordValid) {
+        res.json({
+          IsValid: user.enabled,
+          UserID: user.user_id
+        });
+      } else {
+        res.status(401).send('Invalid credentials');
+      }
     } else {
       res.status(404).send('User not found');
     }
-  } catch (error: any) {
-    res.status(500).send(error);
-    console.log(error);
+  } catch (error) {
+    res.status(500).send('Internal server error');
   }
-}
+};
 
 export const sendRegNotifications = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -99,7 +104,7 @@ export const sendRegNotifications = async (req: Request, res: Response): Promise
       .catch((error: any): void => {
         console.error(error)
       });
-    res.sendStatus(200);
+    res.json({ message: 'OK' });
     return;
   } catch (error: any) {
     console.error(error);

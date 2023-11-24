@@ -41,4 +41,3 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
       console.error(error);
     });
 }
-
