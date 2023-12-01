@@ -31,10 +31,9 @@ export const selectConversationsByUserId = async (req: Request, res: Response): 
 export const createConversation = async (req: Request, res: Response): Promise<any> => {
   // CREATE NEW CONVERSATION
   try {
-    const { recipientEmail, conversationName, sourceLanguage, senderUserId, timestamp } = req.body;
-
-    const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Start :recipientEmail, :conversationName, :sourceLanguage, :senderUserId, :timestamp',  {
-      replacements: { recipientEmail, conversationName, sourceLanguage, senderUserId,timestamp }
+    const { recipientUsername, conversationName, sourceLanguage, senderUserId, timestamp } = req.body;
+    const conversationId: any = await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Start :recipientUsername, :conversationName, :sourceLanguage, :senderUserId, :timestamp',  {
+      replacements: { recipientUsername, conversationName, sourceLanguage, senderUserId,timestamp }
     })
     // RETURN NEW CONVERSATION ID
     res.json(conversationId[0][0]);
