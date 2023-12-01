@@ -21,19 +21,15 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
       const user: any = userResult[0][0];
       const hashedPassword = user.password;
 
-      // COMPARE THE PLAINTEXT PASSWORD WITH THE HASHED PASSWORD
+      // VERIFY PLAINTEXT PASSWORD AGAINST HASHED PASSWORD
       let isPasswordValid: boolean = await bcrypt.compare(plaintextPassword, hashedPassword);
 
-      // STUB: LET TEST_USER ACCOUNTS IN WITHOUT CHECKING FOR HASH
-      if (plaintextPassword === user.password && user.password === 'TestPassword') {
-        isPasswordValid = true;
-      }
-
-      // CHECK IF USER AND PASSWORD ARE VALID
+      // CHECK IF CREDENTIALS ARE VALID
       if (user && isPasswordValid) {
         res.json({
+          username: user.username,
           enabled: user.enabled,
-          userId: user.user_id
+          user_id: user.user_id
         });
       } else {
         res.status(401).send('Invalid credentials');
