@@ -35,14 +35,14 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
         res.status(401).send('Invalid credentials');
       }
     } else {
-      res.status(404).send('User not found');
+      res.status(404).send('Invalid credentials');
     }
   } catch (error) {
     res.status(500).send('Internal server error');
   }
 };
 
-export const sendRegNotifications = async (req: Request, res: Response): Promise<void> => {
+export const sendUserRegNotifications = async (req: Request, res: Response): Promise<void> => {
   try {
     const userEmail: any = req.query.userEmail;
 
