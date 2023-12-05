@@ -34,7 +34,7 @@ export const selectUser = async (req: Request, res: Response): Promise<void> => 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   // CREATE NEW USER
   try {
-    const { username, email, password, firstName, lastName } = req.body;
+    const { username, email, password, firstName, lastName, profile_img } = req.body;
 
     // HASH PASSWORD
     const saltRounds: number = 10;
@@ -42,8 +42,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
     // INSERT USER INTO DATABASE
     try {
-      await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password, :firstName, :lastName', {
-        replacements: { username, email, password: hashedPassword, firstName, lastName }
+      await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password, :firstName, :lastName, :profile_img', {
+        replacements: { username, email, password: hashedPassword, firstName, lastName, profile_img }
       })
     } catch (error: any) {
       res.status(500).send(error);
