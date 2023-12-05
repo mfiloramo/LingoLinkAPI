@@ -64,9 +64,7 @@ export const sendUserRegNotifications = async (req: Request, res: Response): Pro
 
     await courier.send({
       message: {
-        to: {
-          email: process.env.ADMIN_EMAIL,
-        },
+        to: { email: process.env.ADMIN_EMAIL },
         template: 'KDQ7KY5JG845W9QXJS8Z23ZHGRTW',
         data: {
           recipientName: process.env.ADMIN_EMAIL,
@@ -88,9 +86,7 @@ export const sendUserRegNotifications = async (req: Request, res: Response): Pro
     // SEND EMAIL NOTIFICATION TO USER
     await courier.send({
       message: {
-        to: {
-          email: userEmail,
-        },
+        to: { email: userEmail },
         template: 'BMWQMCFFBH4NMEN6HEFWG7BK56WJ',
       },
     })
@@ -136,9 +132,7 @@ export const approveUserRegistration = async (req: any, res: Response): Promise<
 
       await courier.send({
         message: {
-          to: {
-            email: userEmail,
-          },
+          to: { email: userEmail },
           template: '5HVQKZMPVCMX9TQ30BEW1BPVMWAN',
         },
       })
@@ -181,9 +175,7 @@ export const declineUserRegistration = async (req: any, res: any): Promise<void>
 
       await courier.send({
         message: {
-          to: {
-            email: userEmail,
-          },
+          to: { email: userEmail },
           template: '4790REG5SDM7Y4GKRXFRRCMBG9X9',
         },
       })
