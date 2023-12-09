@@ -107,7 +107,9 @@ export const sendUserRegNotifications = async (req: Request, res: Response): Pro
 export const approveUserRegistration = async (req: any, res: Response): Promise<void> => {
   try {
     // CHECK FOR SECRET_REGISTRATION_KEY
-    if (!process.env.SECRET_REGISTRATION_KEY) console.error('Error: SECRET_REGISTRATION_KEY not found.');
+    if (!process.env.SECRET_REGISTRATION_KEY) {
+      console.error('Error: SECRET_REGISTRATION_KEY not found.');
+    }
 
     // VERIFY JSON WEB TOKEN
     const decoded: any = jwt.verify(req.params.token, process.env.SECRET_REGISTRATION_KEY!);
@@ -156,7 +158,9 @@ export const approveUserRegistration = async (req: any, res: Response): Promise<
 export const declineUserRegistration = async (req: any, res: any): Promise<void> => {
   try {
     // CHECK FOR SECRET_REGISTRATION_KEY
-    if (!process.env.SECRET_REGISTRATION_KEY) console.error('Error: SECRET_REGISTRATION_KEY not found.');
+    if (!process.env.SECRET_REGISTRATION_KEY) {
+      console.error('Error: SECRET_REGISTRATION_KEY not found.');
+    }
 
     // DECODE TOKEN
     const decoded: any = jwt.verify(req.params.token, process.env.SECRET_REGISTRATION_KEY!);
