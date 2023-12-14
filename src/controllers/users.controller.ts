@@ -21,7 +21,7 @@ export const selectUser = async (req: Request, res: Response): Promise<void> => 
   try {
     const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
       replacements: {
-        userId: req.body.user_id,
+        userId: req.body.userId,
       }
     })
     res.send(response[0][0]);
@@ -34,7 +34,7 @@ export const selectUser = async (req: Request, res: Response): Promise<void> => 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
   // CREATE NEW USER
   try {
-    const { username, email, password, firstName, lastName, profile_img } = req.body;
+    const { username, email, password, firstName, lastName, profileImg } = req.body;
 
     // HASH PASSWORD
     const saltRounds: number = 10;
@@ -42,8 +42,8 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 
     // INSERT USER INTO DATABASE
     try {
-      await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password, :firstName, :lastName, :profile_img', {
-        replacements: { username, email, password: hashedPassword, firstName, lastName, profile_img }
+      await wcCoreMSQLConnection.query('EXECUTE usp_User_Create :username, :email, :password, :firstName, :lastName, :profileImg', {
+        replacements: { username, email, password: hashedPassword, firstName, lastName, profileImg }
       })
     } catch (error: any) {
       res.status(500).send(error);
@@ -65,7 +65,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
   try {
     const { username, email, password } = req.body;
     await wcCoreMSQLConnection.query('EXECUTE usp_User_Update :userId, :username, :email, :password', {
-      replacements: { userId: req.body.user_id, username, email, password }
+      replacements: { userId: req.body.userId, username, email, password }
     })
     res.json(`User ${ req.body.username } updated successfully`);
   } catch (error: any) {
@@ -79,10 +79,10 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
   try {
     await wcCoreMSQLConnection.query('EXECUTE usp_User_Delete :userId', {
       replacements: {
-        userId: req.body.user_id,
+        userId: req.body.userId,
       }
     })
-    res.json(`User ${ req.body.user_id } deleted successfully`);
+    res.json(`User ${ req.body.userId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.log(error);

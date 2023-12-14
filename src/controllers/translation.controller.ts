@@ -8,7 +8,7 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   const params: any = {
     q: req.body.textInput,
     target: req.body.targLang,
-    source: req.body.source_language
+    source: req.body.sourceLanguage
   };
 
   const encodedParams: URLSearchParams = new URLSearchParams(params);

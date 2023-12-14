@@ -32,9 +32,9 @@ export const createNewMessage = async (req: Request, res: Response): Promise<voi
     await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp', {
       replacements: {
         conversationId: req.body.conversationId,
-        userId: req.body.user_id,
+        userId: req.body.userId,
         content: req.body.textInput,
-        srcLang: req.body.source_language,
+        srcLang: req.body.sourceLanguage,
         timestamp: new Date().toISOString()
       }
     })
