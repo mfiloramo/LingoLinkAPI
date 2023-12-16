@@ -19,7 +19,6 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
     // CHECK IF USER IS AVAILABLE
     if (userResult[0].length > 0) {
       const user: any = userResult[0][0];
-      console.log(user);
       const { username, enabled, userId } = user;
       const hashedPassword = user.password;
 
