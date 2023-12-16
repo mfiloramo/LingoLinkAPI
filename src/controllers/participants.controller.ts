@@ -26,11 +26,11 @@ export const selectParticipant = async (req: Request, res: Response): Promise<vo
       console.log(error);
     }
     // HANDLE SELECTION BY CONVERSATION ID
-  } else if (req.body.selector === 'user_id') {
+  } else if (req.body.selector === 'userId') {
     try {
       const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_UserId :userId', {
         replacements: {
-          userId: req.body.user_id
+          userId: req.body.userId
         }
       })
       res.send(response[0][0]);
