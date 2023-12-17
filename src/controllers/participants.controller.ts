@@ -23,7 +23,7 @@ export const selectParticipant = async (req: Request, res: Response): Promise<vo
       res.send(response[0][0]);
     } catch (error: any) {
       res.status(500).send(error);
-      console.log(error);
+      console.error(error);
     }
     // HANDLE SELECTION BY CONVERSATION ID
   } else if (req.body.selector === 'userId') {
@@ -36,7 +36,7 @@ export const selectParticipant = async (req: Request, res: Response): Promise<vo
       res.send(response[0][0]);
     } catch (error: any) {
       res.status(500).send(error);
-      console.log(error);
+      console.error(error);
     }
   }
 }
@@ -53,7 +53,7 @@ export const createNewParticipant = async (req: Request, res: Response): Promise
     res.send(`Participant with user_id ${ req.body.user_id } created successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -67,6 +67,6 @@ export const deleteParticipant = async (req: Request, res: Response): Promise<vo
     res.json(`Participant with userId ${ req.body.userId } and conversationId ${ req.body.conversationId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }

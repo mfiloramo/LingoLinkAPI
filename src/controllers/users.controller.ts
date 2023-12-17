@@ -27,7 +27,7 @@ export const selectUser = async (req: Request, res: Response): Promise<void> => 
     res.send(response[0][0]);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -47,7 +47,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
       })
     } catch (error: any) {
       res.status(500).send(error);
-      console.log(error);
+      console.error(error);
     }
 
     // SEND SUCCESS RESPONSE IF USER REGISTERS
@@ -70,7 +70,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     res.json(`User ${ req.body.username } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -85,6 +85,6 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     res.json(`User ${ req.body.userId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }

@@ -7,7 +7,7 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   // DEFINE ENCODED HTTP REQUEST PARAMETERS
   const params: any = {
     q: req.body.textInput,
-    target: req.body.targLang,
+    target: req.body.targetLanguage,
     source: req.body.sourceLanguage
   };
 
