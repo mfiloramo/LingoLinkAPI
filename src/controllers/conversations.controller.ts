@@ -9,7 +9,7 @@ export const selectAllConversations = async (req: Request, res: Response): Promi
     res.send(response[0]);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -24,7 +24,7 @@ export const selectConversationsByUserId = async (req: Request, res: Response): 
     res.send(response[0]);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -39,7 +39,7 @@ export const createConversation = async (req: Request, res: Response): Promise<a
     res.json(conversationId[0][0]);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -54,7 +54,7 @@ export const updateConversation = async (req: Request, res: Response): Promise<a
     res.json(`Conversation ${ req.body.name } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -69,6 +69,6 @@ export const deleteConversation = async (req: Request, res: Response): Promise<a
     res.json(`Conversation ${ req.body.conversationId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }

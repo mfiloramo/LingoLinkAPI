@@ -22,7 +22,7 @@ export const selectMessagesByConversationId = async (req: Request, res: Response
     res.json(response[0]);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 
@@ -41,7 +41,7 @@ export const createNewMessage = async (req: Request, res: Response): Promise<voi
     res.json(`Message with conversationId ${ req.body.conversationId } created successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
 export const updateExistingMessage = async (req: Request, res: Response): Promise<void> => {
@@ -51,14 +51,14 @@ export const updateExistingMessage = async (req: Request, res: Response): Promis
       replacements: {
         messageId: req.body.messageId,
         content: req.body.textInput,
-        srcLang: req.body.srcLang,
+        srcLang: req.body.sourceLanguage,
         timestamp: new Date().toISOString(),
       }
     })
     res.json(`Message ${req.body.messageId} updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }}
 export const deleteExistingMessage = async (req: Request, res: Response): Promise<void> => {
   // DELETE EXISTING MESSAGE BY MESSAGE ID
@@ -71,6 +71,6 @@ export const deleteExistingMessage = async (req: Request, res: Response): Promis
     res.json(`Message ${ req.body.messageId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
-    console.log(error);
+    console.error(error);
   }
 }
