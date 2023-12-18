@@ -12,7 +12,7 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   };
 
   // LOG PAYLOAD TO CONSOLE
-  console.log(`translateText invoked with payload: ${ JSON.stringify(params) }`);
+  console.log(`translateText payload: ${ JSON.stringify(params) }`);
 
   const encodedParams: URLSearchParams = new URLSearchParams(params);
 
