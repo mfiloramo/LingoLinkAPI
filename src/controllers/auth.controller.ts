@@ -19,7 +19,7 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
     // CHECK IF USER IS AVAILABLE
     if (userResult[0].length > 0) {
       const user: any = userResult[0][0];
-      const { username, enabled, userId } = user;
+      const { username, enabled, userId, defaultLanguage } = user;
       const hashedPassword = user.password;
 
       // VERIFY PLAINTEXT PASSWORD AGAINST HASHED PASSWORD
@@ -27,7 +27,7 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
 
       // CHECK IF CREDENTIALS ARE VALID
       if (user && isPasswordValid) {
-        res.json({ username, enabled, userId });
+        res.json({ username, enabled, userId, defaultLanguage });
       } else {
         res.status(401).send('Invalid credentials');
       }

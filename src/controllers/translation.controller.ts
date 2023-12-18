@@ -11,6 +11,9 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
     source: req.body.sourceLanguage
   };
 
+  // LOG PAYLOAD TO CONSOLE
+  console.log(`translateText payload: ${ JSON.stringify(params) }`);
+
   const encodedParams: URLSearchParams = new URLSearchParams(params);
 
   // CONFIGURE REQUEST OPTIONS
