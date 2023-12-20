@@ -46,10 +46,10 @@ export const createConversation = async (req: Request, res: Response): Promise<a
 export const updateConversation = async (req: Request, res: Response): Promise<any> => {
   // UPDATE EXISTING CONVERSATION BY ID
   try {
-    const { conversationId, name } = req.body;
+    const { conversationId, conversationName } = req.body;
 
     await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Update :conversationId, :name', {
-      replacements: { conversationId, name }
+      replacements: { conversationId, conversationName }
     })
     res.json(`Conversation ${ req.body.name } updated successfully`);
   } catch (error: any) {
