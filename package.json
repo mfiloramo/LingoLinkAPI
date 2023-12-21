@@ -1,6 +1,6 @@
 {
   "name": "worldchatapi",
-  "version": "1.0.0",
+  "version": "3.5.9",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
