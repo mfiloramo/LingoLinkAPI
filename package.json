@@ -1,5 +1,5 @@
 {
-  "name": "worldchatapi",
+  "name": "lingo-link-api",
   "version": "3.5.9",
   "main": "server.js",
   "scripts": {
