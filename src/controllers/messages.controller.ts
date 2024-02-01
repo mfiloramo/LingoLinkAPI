@@ -11,6 +11,7 @@ export const selectAllMessages = async (req: Request, res: Response): Promise<vo
     res.status(500).send(error);
   }
 }
+
 export const selectMessagesByConversationId = async (req: Request, res: Response): Promise<void> => {
   // SELECT MESSAGES BY CONVERSATION ID
   try {
@@ -28,11 +29,11 @@ export const selectMessagesByConversationId = async (req: Request, res: Response
 
 export const createNewMessage = async (req: Request, res: Response): Promise<void> => {
   // CREATE NEW MESSAGE
+  const { conversationId, userId } = req.body;
+
   try {
     await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp', {
-      replacements: {
-        conversationId: req.body.conversationId,
-        userId: req.body.userId,
+      replacements: { conversationId, userId,
         content: req.body.textInput,
         srcLang: req.body.sourceLanguage,
         timestamp: new Date().toISOString()
@@ -44,6 +45,7 @@ export const createNewMessage = async (req: Request, res: Response): Promise<voi
     console.error(error);
   }
 }
+
 export const updateExistingMessage = async (req: Request, res: Response): Promise<void> => {
   // UPDATE EXISTING MESSAGE
   try {
@@ -55,11 +57,13 @@ export const updateExistingMessage = async (req: Request, res: Response): Promis
         timestamp: new Date().toISOString(),
       }
     })
-    res.json(`Message ${req.body.messageId} updated successfully`);
+    res.json(`Message ${ req.body.messageId } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
-  }}
+  }
+}
+
 export const deleteExistingMessage = async (req: Request, res: Response): Promise<void> => {
   // DELETE EXISTING MESSAGE BY MESSAGE ID
   try {

@@ -11,6 +11,7 @@ export const selectAllParticipants = async (req: Request, res: Response): Promis
     res.status(500).send(error);
   }
 }
+
 export const selectParticipant = async (req: Request, res: Response): Promise<void> => {
   // HANDLE SELECTION BY CONVERSATION ID
   if (req.body.selector === 'conversationId') {
