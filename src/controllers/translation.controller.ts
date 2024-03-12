@@ -6,9 +6,9 @@ import { decode } from 'he';
 export const translateText = async (req: Request, res: Response): Promise<any> => {
   // DEFINE ENCODED HTTP REQUEST PARAMETERS
   const params: any = {
-    q: req.body.textInput,
-    target: req.body.targetLanguage,
-    source: req.body.sourceLanguage
+    from: req.body.sourceLanguage,
+    to: req.body.targetLanguage,
+    text: req.body.textInput
   };
 
   // LOG PAYLOAD TO CONSOLE
@@ -19,10 +19,9 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   // CONFIGURE REQUEST OPTIONS
   const options = {
     method: 'POST',
-    url: 'https://google-translate1.p.rapidapi.com/language/translate/v2',
+    url: process.env.RAPIDAPI_API_GT,
     headers: {
       'content-type': 'application/x-www-form-urlencoded',
-      'Accept-Encoding': 'application/gzip',
       'X-RapidAPI-Key': process.env.RAPIDAPI_KEY_GT,
       'X-RapidAPI-Host': process.env.RAPIDAPI_HOST_GT
     },
@@ -33,7 +32,7 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   axios
     .request(options)
     .then((response: any): void => {
-      const translatedText = response.data.data.translations[0].translatedText;
+      const translatedText = response.data.trans;
 
       // DECODE HTML ENTITIES IN TEXT
       const decodedText: string = decode(translatedText);
