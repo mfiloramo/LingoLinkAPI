@@ -2,7 +2,7 @@
   <img src="https://user-images.githubusercontent.com/72812809/236295242-99005189-2eeb-4d21-9653-6fed5f4520c6.png" alt="readmeLogo" width="175px" height="23%" />
 </div>
 
-<h1 align="center">Multilingual Messaging Made Easy</h1>
+<h1 align="center">Multilingual Messaging Made Simple</h1>
 
 <hr/>
 
