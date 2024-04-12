@@ -1,6 +1,7 @@
 {
   "name": "lingo-link-api",
-  "version": "3.5.9",
+  "version": "3.5.10",
+  "license": "MIT",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,7 +14,6 @@
     "url": ""
   },
   "author": "Michael Filoramo",
-  "license": "ISC",
   "dependencies": {
     "@trycourier/courier": "^5.7.0",
     "bcrypt": "^5.1.1",
