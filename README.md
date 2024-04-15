@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="/client/src/assets/images/lingolink-banner.png" alt="readmeLogo" />
+  <img src="src/assets/images/lingolink-banner.png" alt="readmeLogo" />
 </div>
 
 <hr/>
