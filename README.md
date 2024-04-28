@@ -4,7 +4,9 @@
 
 <hr/>
 
-<h4 align="center">LingoLink is a messaging application that allows users to communicate with others regardless of the language they speak. With the server's integration of Google Translate API, users can send and receive messages in their own language while the server automatically translates the messages in real-time for all other parties.</h4><br/>
+<h4 align="center">LingoLink is a messaging application that allows users to communicate with others regardless of the language they speak. With the server's integration of Google Translate API, users can send and receive messages in their own language while the server automatically translates the messages in real-time for all other parties.</h4>
+
+<h4 align="center">This repo is for the API — source code for the client can be found <a href="https://github.com/mfiloramo/LingoLinkAPI">here</a>. The T-SQL repo can be found <a href="https://github.com/mfiloramo/LingoLinkSQL">here</a>.</h4><br/>
 
 <div align="center">
   <img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/mfiloramo/worldChatAPI/.github%2Fworkflows%2Fmain_lingolinkapi.yml">
