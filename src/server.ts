@@ -13,7 +13,7 @@ import { authRouter } from "./routers/auth.router";
 
 // GLOBAL VARIABLES
 const app: Express = express();
-const PORT: number = parseInt(process.env.PORT as string, 10) || 8080;
+const PORT: number = parseInt(process.env.PORT as string, 10) || 8080
 const PORTS: number[] = [ 3003, 3004 ]
 const server: any = http.createServer(app);
 
