@@ -1,4 +1,3 @@
-// MODULE IMPORTS
 import express, { Express } from 'express';
 import http from 'http';
 import WebSocket from 'ws';
@@ -12,64 +11,64 @@ import { messagesRouter } from './routers/messages.router';
 import { conversationsRouter } from './routers/conversations.router';
 import { authRouter } from "./routers/auth.router";
 
-// GLOBAL VARIABLES
-const app: Express = express();
-const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
-const server: any = http.createServer(app);
+// PORTS ARRAY
+const ports: number[] = [ 3000 ];
 
-// CORS MIDDLEWARE
-const corsOptions: CorsOptions = {
-  origin: [ 'http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net' ],
-  optionsSuccessStatus: 200,
-  credentials: true,
-  methods: [ 'GET', 'POST', 'PUT', 'DELETE' ],
-  allowedHeaders: [ 'Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept' ],
-};
-app.use(express.json());
-app.use(cors(corsOptions));
+// START SERVER (OPTION OF TESTING MULTLIPLE PORTS)
+function createServer(PORT: number): void {
+  const app: Express = express();
+  const server = http.createServer(app);
+  const wss = new WebSocket.Server({ server });
 
-// SERVER ROUTES
-app
-  .use('/api/translate', translationRouter)
-  .use('/api/users', usersRouter)
-  .use('/api/participants', participantsRouter)
-  .use('/api/messages', messagesRouter)
-  .use('/api/conversations', conversationsRouter)
-  .use('/api/auth', authRouter)
+  // CORS MIDDLEWARE
+  const corsOptions: CorsOptions = {
+    origin: [ 'http://localhost:4200', 'https://orange-tree-0d3c88e0f.3.azurestaticapps.net' ],
+    optionsSuccessStatus: 200,
+    credentials: true,
+    methods: [ 'GET', 'POST', 'PUT', 'DELETE' ],
+    allowedHeaders: [ 'Content-Type', 'Authorization', 'Origin', 'X-Requested-With', 'Accept' ],
+  };
 
-// HANDLE PREFLIGHT REQUESTS
-app.options('*', cors(corsOptions));
+  app.use(express.json());
+  app.use(cors(corsOptions));
 
-// TODO: BUILD WILDCARD VIEW
-// WILDCARD ENDPOINT
-app.use('*', (req: any, res: any): void => {
-  res.status(404).send('Resource not found');
-});
+  // SERVER ROUTES
+  app
+    .use('/api/translate', translationRouter)
+    .use('/api/users', usersRouter)
+    .use('/api/participants', participantsRouter)
+    .use('/api/messages', messagesRouter)
+    .use('/api/conversations', conversationsRouter)
+    .use('/api/auth', authRouter);
 
-// INITIATE WEBSOCKET SERVER ON TOP OF THE HTTP SERVER
-const wss: any = new WebSocket.Server({ server });
+  // HANDLE PREFLIGHT REQUESTS
+  app.options('*', cors(corsOptions));
 
-// WEBSOCKET SERVER
-wss.on('connection', (ws: WebSocket): void => {
-  // INDICATE CLIENT CONNECTION
-  console.log('Client connected...');
+  // WILDCARD ENDPOINT FOR UNHANDLED ROUTES
+  app.use('*', (req, res) => res.status(404).send('Resource not found'));
 
-  // BROADCAST WEBSOCKET DATA TO CLIENTS
-  ws.on('message', (message: WebSocket.Data): void => {
-    wss.clients.forEach((client: WebSocket.WebSocket): void => {
-      if (client !== ws && client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
+  // WEB SOCKET SERVER
+  wss.on('connection', (ws: WebSocket): void => {
+    console.log(`Client connected on port ${ PORT }...`);
+
+    ws.on('message', message => {
+      wss.clients.forEach(client => {
+        if (client !== ws && client.readyState === WebSocket.OPEN) {
+          client.send(message);
+        }
+      });
+    });
+
+    ws.on('close', (): void => {
+      console.log('Client disconnected...');
     });
   });
 
-  ws.on('close', (): void => {
-    // INDICATE CLIENT DISCONNECTION
-    console.log('Client disconnected...');
+  // LISTEN FOR INCOMING CONNECTIONS
+  server.listen(PORT, (): void => {
+    console.log(`Server listening on port: ${ PORT }...`);
   });
-});
+}
 
-// RUN SERVER FOR API AND WEBSOCKETS
-server.listen(PORT, (): void => {
-  console.log(`Server listening on port: ${ PORT }...`);
-});
+// INITIATE SERVER ON EACH SPECIFIED PORT
+ports.forEach(createServer);
