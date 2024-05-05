@@ -59,14 +59,30 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
   }
 }
 
-export const updateUser = async (req: Request, res: Response): Promise<void> => {
-  // UPDATE EXISTING USER
+export const updateUsername = async (req: Request, res: Response): Promise<void> => {
+  // UPDATE EXISTING USERNAME BY USERID
   try {
-    const { userId, username, email, password } = req.body;
-    await wcCoreMSQLConnection.query('EXECUTE usp_User_Update :userId, :username, :email, :password', {
-      replacements: { userId, username, email, password }
+    const { userId, username } = req.body;
+    await wcCoreMSQLConnection.query('EXECUTE usp_User_Update_Username :userId, :username', {
+      replacements: { userId, username }
     })
     res.json(`User ${ username } updated successfully`);
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.error(error);
+  }
+}
+
+export const updateName = async (req: Request, res: Response): Promise<void> => {
+  // UPDATE EXISTING USERNAME BY USERID
+  try {
+    const { userId, firstName, lastName } = req.body;
+    const formattedName: string = firstName.charAt(0).toUpperCase() + firstName.slice(1) + ' ' + lastName.charAt(0).toUpperCase() + lastName.slice(1);
+
+    await wcCoreMSQLConnection.query('EXECUTE usp_User_Update_Name :userId, :firstName, :lastName', {
+      replacements: { userId, firstName, lastName }
+    })
+    res.json(`User ${ formattedName } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);

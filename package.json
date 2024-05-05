@@ -1,6 +1,6 @@
 {
   "name": "lingo-link-api",
-  "version": "3.5.11",
+  "version": "3.6.0",
   "license": "MIT",
   "main": "server.js",
   "scripts": {
