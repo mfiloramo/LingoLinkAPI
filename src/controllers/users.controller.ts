@@ -74,7 +74,7 @@ export const updateUsername = async (req: Request, res: Response): Promise<void>
 }
 
 export const updateName = async (req: Request, res: Response): Promise<void> => {
-  // UPDATE EXISTING USERNAME BY USERID
+  // UPDATE EXISTING NAME BY USERID
   try {
     const { userId, firstName, lastName } = req.body;
     const formattedName: string = firstName.charAt(0).toUpperCase() + firstName.slice(1) + ' ' + lastName.charAt(0).toUpperCase() + lastName.slice(1);
@@ -83,6 +83,21 @@ export const updateName = async (req: Request, res: Response): Promise<void> => 
       replacements: { userId, firstName, lastName }
     })
     res.json(`User ${ formattedName } updated successfully`);
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.error(error);
+  }
+}
+
+export const updateEmail = async (req: Request, res: Response): Promise<void> => {
+  // UPDATE EXISTING EMAIL BY USERID
+  try {
+    const { userId, email } = req.body;
+
+    await wcCoreMSQLConnection.query('EXECUTE usp_User_Update_Email :userId, :email', {
+      replacements: { userId, email }
+    })
+    res.json(`User ${ email } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
@@ -101,4 +116,9 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     res.status(500).send(error);
     console.error(error);
   }
+}
+
+export const emailUpdateConfirmation = async (req: Request, res: Response): Promise<void> => {
+  // PING COURIER TO SEND EMAIL CONFIRMATION
+
 }
