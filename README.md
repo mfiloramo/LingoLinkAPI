@@ -30,14 +30,12 @@ The application is currently a work in progress and is not yet available for dow
 
 ## Technologies Used
 
-- Google Translate API
-- Angular 15 / TypeScript
-- Angular Material 15
-- Ionic
+- TypeScript
 - TailwindCSS
 - Node/Express
-- SQL Server
 - Sequelize (ORM)
+- SQL Server (Azure-hosted)
+- Google Translate API
 
 ## Contributions
 
