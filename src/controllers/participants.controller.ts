@@ -15,11 +15,10 @@ export const selectAllParticipants = async (req: Request, res: Response): Promis
 export const selectParticipant = async (req: Request, res: Response): Promise<void> => {
   // HANDLE SELECTION BY CONVERSATION ID
   if (req.body.selector === 'conversationId') {
+    const { conversationId } = req.body;
     try {
       const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_ConId :conversationId', {
-        replacements: {
-          conversationId: req.body.conversationId
-        }
+        replacements: { conversationId }
       })
       res.send(response[0][0]);
     } catch (error: any) {
@@ -29,10 +28,9 @@ export const selectParticipant = async (req: Request, res: Response): Promise<vo
     // HANDLE SELECTION BY CONVERSATION ID
   } else if (req.body.selector === 'userId') {
     try {
+      const { userId } = req.body;
       const response = await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Select_UserId :userId', {
-        replacements: {
-          userId: req.body.userId
-        }
+        replacements: { userId }
       })
       res.send(response[0][0]);
     } catch (error: any) {
@@ -45,13 +43,12 @@ export const selectParticipant = async (req: Request, res: Response): Promise<vo
 export const createNewParticipant = async (req: Request, res: Response): Promise<void> => {
   // CREATE NEW PARTICIPANT
   try {
+    const { userId, conversationId } = req.body;
+
     await wcCoreMSQLConnection.query('EXECUTE usp_Participant_Create :userId, :conversationId', {
-      replacements: {
-        userId: req.body.userId,
-        conversationId: req.body.conversationId,
-      }
+      replacements: { userId, conversationId }
     })
-    res.send(`Participant with user_id ${ req.body.user_id } created successfully`);
+    res.send(`Participant with user_id ${ userId } created successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);

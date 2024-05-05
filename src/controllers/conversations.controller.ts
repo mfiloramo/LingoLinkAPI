@@ -51,7 +51,7 @@ export const updateConversation = async (req: Request, res: Response): Promise<a
     await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Update :conversationId, :name', {
       replacements: { conversationId, conversationName }
     })
-    res.json(`Conversation ${ req.body.name } updated successfully`);
+    res.json(`Conversation ${ conversationName } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
@@ -66,7 +66,7 @@ export const deleteConversation = async (req: Request, res: Response): Promise<a
     await wcCoreMSQLConnection.query('EXECUTE usp_Conversation_Delete :conversationId', {
       replacements: { conversationId }
     })
-    res.json(`Conversation ${ req.body.conversationId } deleted successfully`);
+    res.json(`Conversation ${ conversationId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);

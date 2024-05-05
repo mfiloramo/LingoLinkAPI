@@ -6,6 +6,7 @@ import { CourierClient, ICourierClient } from "@trycourier/courier";
 
 import * as dotenv from 'dotenv';
 dotenv.config();
+// TODO: IMPLEMENT SERVER-SIDE SESSIONS; AUTO-LOGOUT FEATURE
 
 export const validateUser = async (req: Request, res: Response): Promise<void> => {
   try {

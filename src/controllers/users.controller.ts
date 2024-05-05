@@ -19,10 +19,9 @@ export const selectAllUsers = async (req: Request, res: Response): Promise<void>
 export const selectUser = async (req: Request, res: Response): Promise<void> => {
   // SELECT USER BY ID
   try {
+    const { userId } = req.body;
     const response: any = await wcCoreMSQLConnection.query('EXECUTE usp_User_Select :userId', {
-      replacements: {
-        userId: req.body.userId,
-      }
+      replacements: { userId }
     })
     res.send(response[0][0]);
   } catch (error: any) {
@@ -51,7 +50,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     }
 
     // SEND SUCCESS RESPONSE IF USER REGISTERS
-    res.json(`User ${ req.body.username } created successfully, pending approval.`);
+    res.json(`User ${ username } created successfully, pending approval.`);
   } catch (error: any) {
     console.error("Error in user registration:", error);
     if (!res.headersSent) {
@@ -63,11 +62,11 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   // UPDATE EXISTING USER
   try {
-    const { username, email, password } = req.body;
+    const { userId, username, email, password } = req.body;
     await wcCoreMSQLConnection.query('EXECUTE usp_User_Update :userId, :username, :email, :password', {
-      replacements: { userId: req.body.userId, username, email, password }
+      replacements: { userId, username, email, password }
     })
-    res.json(`User ${ req.body.username } updated successfully`);
+    res.json(`User ${ username } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
@@ -77,12 +76,11 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   // DELETE EXISTING USER BY ID
   try {
+    const { userId } = req.body;
     await wcCoreMSQLConnection.query('EXECUTE usp_User_Delete :userId', {
-      replacements: {
-        userId: req.body.userId,
-      }
+      replacements: { userId }
     })
-    res.json(`User ${ req.body.userId } deleted successfully`);
+    res.json(`User ${ userId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
