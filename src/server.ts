@@ -45,7 +45,7 @@ app.use('*', (req: any, res: any): void => {
   res.status(404).send('Resource not found');
 });
 
-// INITIATE WEBSOCKET SERVER ON TOP OF THE HTTP SERVER
+// INITIATE WEBSOCKET SERVER ON TOP OF HTTP SERVER
 const wss: any = new WebSocket.Server({ server });
 
 // WEBSOCKET SERVER

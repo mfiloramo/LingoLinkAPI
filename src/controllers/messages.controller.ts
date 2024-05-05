@@ -30,7 +30,6 @@ export const selectMessagesByConversationId = async (req: Request, res: Response
 export const createNewMessage = async (req: Request, res: Response): Promise<void> => {
   // CREATE NEW MESSAGE
   const { conversationId, userId } = req.body;
-
   try {
     await wcCoreMSQLConnection.query('EXECUTE usp_Message_Create :conversationId, :userId, :content, :srcLang, :timestamp', {
       replacements: { conversationId, userId,
@@ -39,7 +38,7 @@ export const createNewMessage = async (req: Request, res: Response): Promise<voi
         timestamp: new Date().toISOString()
       }
     })
-    res.json(`Message with conversationId ${ req.body.conversationId } created successfully`);
+    res.json(`Message with conversationId ${ conversationId } created successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
@@ -49,15 +48,16 @@ export const createNewMessage = async (req: Request, res: Response): Promise<voi
 export const updateExistingMessage = async (req: Request, res: Response): Promise<void> => {
   // UPDATE EXISTING MESSAGE
   try {
+    const { messageId } = req.body;
     await wcCoreMSQLConnection.query('EXECUTE usp_Message_Update :messageId, :content, :srcLang, :timestamp', {
       replacements: {
-        messageId: req.body.messageId,
+        messageId,
         content: req.body.textInput,
         srcLang: req.body.sourceLanguage,
         timestamp: new Date().toISOString(),
       }
     })
-    res.json(`Message ${ req.body.messageId } updated successfully`);
+    res.json(`Message ${ messageId } updated successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
@@ -67,12 +67,11 @@ export const updateExistingMessage = async (req: Request, res: Response): Promis
 export const deleteExistingMessage = async (req: Request, res: Response): Promise<void> => {
   // DELETE EXISTING MESSAGE BY MESSAGE ID
   try {
+    const { messageId } = req.body;
     await wcCoreMSQLConnection.query('EXECUTE usp_Message_Delete :messageId', {
-      replacements: {
-        messageId: req.body.messageId,
-      }
+      replacements: { messageId }
     })
-    res.json(`Message ${ req.body.messageId } deleted successfully`);
+    res.json(`Message ${ messageId } deleted successfully`);
   } catch (error: any) {
     res.status(500).send(error);
     console.error(error);
