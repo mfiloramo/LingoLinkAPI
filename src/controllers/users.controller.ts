@@ -119,6 +119,14 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
 }
 
 export const emailUpdateConfirmation = async (req: Request, res: Response): Promise<void> => {
-  // PING COURIER TO SEND EMAIL CONFIRMATION
+  try {
+    const newEmail: string = req.body.email
+    // PING COURIER TO SEND EMAIL CONFIRMATION
 
+
+    res.json(`Email confirmation to ${ newEmail } sent successfully`)
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.error(error);
+  }
 }
