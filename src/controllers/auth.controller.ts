@@ -66,9 +66,9 @@ export const sendUserRegNotifications = async (req: Request, res: Response): Pro
         template: 'KDQ7KY5JG845W9QXJS8Z23ZHGRTW',
         data: {
           recipientName: process.env.ADMIN_EMAIL,
-          userEmail: userEmail,
-          approveRegLink: approveRegLink,
-          declineRegLink: declineRegLink
+          userEmail,
+          approveRegLink,
+          declineRegLink
         },
       },
     })

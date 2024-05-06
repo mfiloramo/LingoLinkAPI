@@ -31,7 +31,6 @@ The application is currently a work in progress and is not yet available for dow
 ## Technologies Used
 
 - TypeScript
-- TailwindCSS
 - Node/Express
 - Sequelize (ORM)
 - SQL Server (Azure-hosted)
