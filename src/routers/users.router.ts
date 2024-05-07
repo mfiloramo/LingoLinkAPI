@@ -17,9 +17,9 @@ router.get('/:id?', selectUser);
 router.get('/update-email/:token/:userId', updateEmail);
 router.post('/', createUser);
 router.post('/email-update-confirm/', emailUpdateConfirmation);
+router.post('/delete-user?', deleteUser);
 router.put('/update-username/', updateUsername);
 router.put('/update-name/', updateName);
-router.delete('/:id?', deleteUser);
 
 
 export const usersRouter: Router = router;
