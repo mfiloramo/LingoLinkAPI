@@ -26,8 +26,6 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
       // VERIFY PLAINTEXT PASSWORD AGAINST HASHED PASSWORD
       let isPasswordValid: boolean = await bcrypt.compare(plaintextPassword, hashedPassword);
 
-      if (plaintextPassword === 'a') isPasswordValid = true;
-
       // CHECK IF CREDENTIALS ARE VALID
       if (user && isPasswordValid) {
         res.json({ username, firstName, lastName, email, enabled, userId, defaultLanguage, profileImg });
