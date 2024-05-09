@@ -40,6 +40,24 @@ export const validateUser = async (req: Request, res: Response): Promise<void> =
   }
 };
 
+export const changePassword = async (req: Request, res: Response): Promise<void> => {
+  const { email, newPassword } = req.body;
+
+  // HASH PASSWORD
+  const saltRounds: number = 10;
+  const hashedPassword: string = await bcrypt.hash(newPassword, saltRounds);
+
+  // CHANGE USER PASSWORD IN DATABASE
+  try {
+    await wcCoreMSQLConnection.query('EXECUTE usp_User_Update_Password :email, :hashedPassword', {
+      replacements: { email, hashedPassword }
+    });
+  } catch (error: any) {
+    res.status(500).send(error);
+    console.error(error);
+  }
+}
+
 export const sendUserRegNotifications = async (req: Request, res: Response): Promise<void> => {
   try {
     const userEmail: any = req.query.userEmail;
