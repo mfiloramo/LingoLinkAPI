@@ -14,6 +14,7 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   // LOG PAYLOAD TO CONSOLE
   console.log(`translateText payload: ${ JSON.stringify(params) }`);
 
+  // INITIALIZE ENCODED SEARCH PARAMETERS
   const encodedParams: URLSearchParams = new URLSearchParams(params);
 
   // CONFIGURE REQUEST OPTIONS
@@ -32,11 +33,13 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   axios
     .request(options)
     .then((response: any): void => {
+      console.log('This is the response:', response);
       const translatedText = response.data.trans;
 
       // DECODE HTML ENTITIES IN TEXT
       const decodedText: string = decode(translatedText);
 
+      // SEND RESPONSE TO USER
       res.json(decodedText);
     })
     .catch((error: any): void => {
