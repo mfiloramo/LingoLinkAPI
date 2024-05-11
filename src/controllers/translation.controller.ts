@@ -34,7 +34,6 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   axios
     .request(options)
     .then((response: any): void => {
-      console.log('This is the response:', response);
       const translatedText = response.data.trans;
 
       // DECODE HTML ENTITIES IN TEXT
@@ -44,7 +43,6 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
       res.json(decodedText);
     })
     .catch((error: any): void => {
-      console.log('There has been a tomato error');
       console.error(error);
     });
 }
