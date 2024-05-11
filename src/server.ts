@@ -13,8 +13,7 @@ import { authRouter } from "./routers/auth.router";
 
 // GLOBAL VARIABLES
 const app: Express = express();
-const PORT: number = parseInt(process.env.PORT as string, 10) || 8080
-const PORTS: number[] = [ 3003, 3004 ] // FOR LOAD BALANCER TESTING --- ADD MORE PORTS TO RUN MORE SERVERS
+const PORT: number = parseInt(process.env.PORT as string, 10) || 3000;
 const server: any = http.createServer(app);
 
 // CORS MIDDLEWARE
