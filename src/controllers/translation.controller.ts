@@ -43,6 +43,7 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
       res.json(decodedText);
     })
     .catch((error: any): void => {
+      console.log('There has been a tomato error');
       console.error(error);
     });
 }
