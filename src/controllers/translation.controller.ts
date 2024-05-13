@@ -30,7 +30,6 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
   };
 
   // SEND HTTP REQUEST AND RETURN RESPONSE
-  // TODO: THIS IS FAILING IN PRODUCTION
   axios
     .request(options)
     .then((response: any): void => {
