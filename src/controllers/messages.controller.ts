@@ -9,6 +9,7 @@ export const selectAllMessages = async (req: Request, res: Response): Promise<vo
     res.send(selectAll[0]);
   } catch (error: any) {
     res.status(500).send(error);
+    console.error(error);
   }
 }
 

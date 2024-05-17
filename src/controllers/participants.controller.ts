@@ -9,6 +9,7 @@ export const selectAllParticipants = async (req: Request, res: Response): Promis
     res.send(selectAll[0]);
   } catch (error: any) {
     res.status(500).send(error);
+    console.error(error);
   }
 }
 
