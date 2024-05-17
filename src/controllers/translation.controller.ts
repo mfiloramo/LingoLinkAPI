@@ -42,6 +42,7 @@ export const translateText = async (req: Request, res: Response): Promise<any> =
       res.json(decodedText);
     })
     .catch((error: any): void => {
+      res.status(500).send(error);
       console.error(error);
     });
 }
